@@ -123,7 +123,6 @@ where
     }
 
     pub fn merge_sort_recursion(&mut self, l: usize, r: usize) {
-        fn help() {}
         let len = self.array.len();
         if len <= 1 {
             return;
