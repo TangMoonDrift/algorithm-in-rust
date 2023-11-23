@@ -1,3 +1,5 @@
+use super::merge;
+
 pub struct Sort<'a, T>
 where
     T: PartialOrd + Copy,
@@ -18,42 +20,6 @@ where
             return;
         }
         (self.array[a], self.array[b]) = (self.array[b], self.array[a]);
-    }
-
-    fn merge(&mut self, l: usize, m: usize, r: usize) {
-        let len = self.array.len();
-        let first: T = self.array[0];
-        let mut help: Vec<T> = vec![first; len];
-
-        let mut a = l;
-        let mut b = m + 1;
-        let mut i = l;
-        while a <= m && b <= r {
-            if self.array[a] > self.array[b] {
-                help[i] = self.array[b];
-                b += 1;
-            } else {
-                help[i] = self.array[a];
-                a += 1;
-            }
-            i += 1;
-        }
-
-        while a <= m {
-            help[i] = self.array[a];
-            i += 1;
-            a += 1;
-        }
-
-        while b <= r {
-            help[i] = self.array[b];
-            i += 1;
-            b += 1;
-        }
-
-        for i in l..=r {
-            self.array[i] = help[i];
-        }
     }
 
     pub fn select_sort(&mut self) {
@@ -115,7 +81,7 @@ where
                     break;
                 }
                 let r = (l + (pace << 1) - 1).min(len - 1);
-                self.merge(l, m, r);
+                merge(self.array, l, m, r);
                 l = r + 1;
             }
             pace <<= 1;
@@ -133,6 +99,6 @@ where
         let m = l + (r - l) / 2;
         self.merge_sort_recursion(l, m);
         self.merge_sort_recursion(m + 1, r);
-        self.merge(l, m, r);
+        merge(self.array, l, m, r);
     }
 }
