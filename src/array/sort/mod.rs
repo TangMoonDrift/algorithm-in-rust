@@ -11,6 +11,7 @@ impl<'a, T> Sort<'a, T>
 where
     T: PartialOrd + Copy,
 {
+    // 获取可排序的可变数组引用
     pub fn from(array: &'a mut [T]) -> Self {
         Self { array }
     }
@@ -22,6 +23,7 @@ where
         (self.array[a], self.array[b]) = (self.array[b], self.array[a]);
     }
 
+    // 选择排序
     pub fn select_sort(&mut self) {
         let len = self.array.len();
         if len <= 1 {
@@ -38,6 +40,7 @@ where
         }
     }
 
+    // 冒泡排序
     pub fn bubble_sort(&mut self) {
         let len = self.array.len();
         if len <= 1 {
@@ -52,6 +55,7 @@ where
         }
     }
 
+    // 插入排序
     pub fn insert_sort(&mut self) {
         let len = self.array.len();
         if len <= 1 {
@@ -88,6 +92,7 @@ where
         }
     }
 
+    // 归并排序递归方式
     pub fn merge_sort_recursion(&mut self, l: usize, r: usize) {
         let len = self.array.len();
         if len <= 1 {
