@@ -8,11 +8,12 @@ fn main() {
     let len = nums.len();
     let res = lis(&nums);
     let mut sortable = Sort::from(&mut nums);
-    sortable.select_sort();
-    sortable.bubble_sort();
-    sortable.insert_sort();
-    sortable.merge_sort();
-    sortable.merge_sort_recursion(0, len - 1);
+    sortable
+        .select_sort()
+        .bubble_sort()
+        .insert_sort()
+        .merge_sort()
+        .merge_sort_recursion(0, len - 1);
     println!("{}", res);
     println!("{:?}", nums);
 }

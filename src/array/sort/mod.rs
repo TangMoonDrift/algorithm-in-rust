@@ -24,10 +24,10 @@ where
     }
 
     // 选择排序
-    pub fn select_sort(&mut self) {
+    pub fn select_sort(&mut self) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
-            return;
+            return self;
         }
         for i in 0..(len - 1) {
             let mut min = i;
@@ -38,13 +38,14 @@ where
             }
             self.swap(min, i);
         }
+        self
     }
 
     // 冒泡排序
-    pub fn bubble_sort(&mut self) {
+    pub fn bubble_sort(&mut self) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
-            return;
+            return self;
         }
         for i in 0..(len - 1) {
             for j in 0..(len - 1 - i) {
@@ -53,13 +54,14 @@ where
                 }
             }
         }
+        self
     }
 
     // 插入排序
-    pub fn insert_sort(&mut self) {
+    pub fn insert_sort(&mut self) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
-            return;
+            return self;
         }
         for i in 1..len {
             let mut j = i;
@@ -68,13 +70,14 @@ where
                 j -= 1;
             }
         }
+        self
     }
 
     // 归并排序
-    pub fn merge_sort(&mut self) {
+    pub fn merge_sort(&mut self) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
-            return;
+            return self;
         }
         let mut pace: usize = 1;
         while pace < len {
@@ -90,20 +93,22 @@ where
             }
             pace <<= 1;
         }
+        self
     }
 
     // 归并排序递归方式
-    pub fn merge_sort_recursion(&mut self, l: usize, r: usize) {
+    pub fn merge_sort_recursion(&mut self, l: usize, r: usize) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
-            return;
+            return self;
         }
         if l == r {
-            return;
+            return self;
         }
         let m = l + (r - l) / 2;
         self.merge_sort_recursion(l, m);
         self.merge_sort_recursion(m + 1, r);
         merge(self.array, l, m, r);
+        self
     }
 }

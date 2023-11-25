@@ -1,14 +1,6 @@
 pub mod search;
 pub mod sort;
 
-pub fn small_sum(array: &[i32], l: usize, r: usize) -> i32 {
-    if l == r {
-        return 0;
-    }
-
-    return array[0];
-}
-
 /**
  * 归并函数
  */
