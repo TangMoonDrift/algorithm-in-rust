@@ -1,5 +1,6 @@
 mod array;
 mod bit;
+mod link;
 
 use array::search::lis;
 use array::sort::Sort;
