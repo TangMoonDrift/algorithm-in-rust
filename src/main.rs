@@ -1,4 +1,5 @@
 mod array;
+mod bit;
 
 use array::search::lis;
 use array::sort::Sort;
