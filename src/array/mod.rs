@@ -1,3 +1,4 @@
+pub mod greedy;
 pub mod search;
 pub mod sort;
 

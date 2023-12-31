@@ -1,5 +1,6 @@
 mod array;
 mod bit;
+mod hash;
 mod link;
 
 use array::search::lis;
