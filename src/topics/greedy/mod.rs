@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{BinaryHeap, HashMap};
 
 /**
  * 题目描述：https://leetcode.cn/problems/minimum-number-of-days-to-eat-n-oranges/description/
@@ -27,4 +27,46 @@ pub fn min_days(n: i32) -> i32 {
     }
 
     help(n, &mut dp)
+}
+
+/**
+ * 题目描述：https://leetcode.cn/problems/course-schedule-iii/description/
+ * 这里有 n 门不同的在线课程，按从 1 到 n 编号。给你一个数组 courses ，
+ * 其中 courses[i] = [durationi, lastDayi] 表示第 i 门课将会 持续 上 durationi 天课，
+ * 并且必须在不晚于 lastDayi 的时候完成。
+ *
+ * 你的学期从第 1 天开始。且不能同时修读两门及两门以上的课程。
+ * 返回你最多可以修读的课程数目。
+ */
+pub fn schedule_course(courses: Vec<Vec<i32>>) -> i32 {
+    let mut courses: Vec<_> = courses
+        .into_iter()
+        .filter(|course| course[0] <= course[1])
+        .collect();
+    courses.sort_by_key(|course| course[1]);
+
+    if courses.is_empty() {
+        return 0;
+    }
+
+    let mut cur_time = 0;
+    let mut heap = BinaryHeap::new();
+
+    for course in courses {
+        let (duration, deadline) = (course[0], course[1]);
+        if cur_time + duration <= deadline {
+            cur_time += duration;
+            heap.push(duration);
+        } else {
+            if let Some(&d) = heap.peek() {
+                if duration < d {
+                    cur_time = cur_time - d + duration;
+                    heap.pop();
+                    heap.push(duration);
+                }
+            }
+        }
+    }
+
+    heap.len() as i32
 }
