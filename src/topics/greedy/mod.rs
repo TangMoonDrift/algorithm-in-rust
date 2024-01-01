@@ -1,4 +1,7 @@
+pub mod utils;
+
 use std::collections::{BinaryHeap, HashMap};
+use utils::power;
 
 /**
  * 题目描述：https://leetcode.cn/problems/minimum-number-of-days-to-eat-n-oranges/description/
@@ -69,4 +72,18 @@ pub fn schedule_course(courses: Vec<Vec<i32>>) -> i32 {
     }
 
     heap.len() as i32
+}
+
+/**
+ * 将一个数字拆分成 k 个非负整数的和，要求这 k 个整数的乘积。
+ */
+pub fn max_value(n: i32, k: usize) -> i32 {
+    let model = 1000000007;
+    let avg = n / k as i32;
+    let rest = n % k as i32;
+
+    let avgs_group = power(avg, k as i32 - rest, model);
+    let non_avgs_group = power(avg + 1, rest, model);
+
+    avgs_group * non_avgs_group % model
 }
