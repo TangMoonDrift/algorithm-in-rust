@@ -20,4 +20,7 @@ fn main() {
         .merge_sort_recursion(0, len - 1);
     println!("{}", res);
     println!("{:?}", nums);
+
+    let gcd = algorithm::gcd(12, 8);
+    println!("{}", gcd);
 }
