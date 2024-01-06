@@ -87,3 +87,36 @@ pub fn max_value(n: i32, k: usize) -> i32 {
 
     avgs_group * non_avgs_group % model
 }
+
+/**
+ * 题目描述：https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/description/
+ * 给你一个整数数组 nums ，你需要找出一个 连续子数组 ，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
+ * 请你找出符合题意的 最短 子数组，并输出它的长度。
+ */
+pub fn find_unsorted_subarray(nums: Vec<i32>) -> i32 {
+    let len = nums.len();
+    let mut max = i32::MIN;
+    let mut min = i32::MAX;
+    let mut begin = -1;
+    let mut end = -1;
+
+    for i in 0..len {
+        if max > nums[i] {
+            end = i as i32;
+        } else {
+            max = nums[i];
+        }
+
+        if min < nums[len - i - 1] {
+            begin = len as i32 - i as i32 - 1;
+        } else {
+            min = nums[len - i - 1];
+        }
+    }
+
+    if end == -1 {
+        0
+    } else {
+        end - begin + 1
+    }
+}
