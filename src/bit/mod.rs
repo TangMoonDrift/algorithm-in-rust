@@ -10,7 +10,7 @@ pub fn print_binary(num: i32) {
                 result += "1";
             }
         }
-        i -= 1
+        i -= 1;
     }
     println!("{}", result);
 }
