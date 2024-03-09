@@ -40,3 +40,11 @@ fn merge<T: PartialOrd + Copy>(array: &mut [T], l: usize, m: usize, r: usize) {
         array[i] = help[i];
     }
 }
+
+fn heap_insert<T: PartialOrd + Copy>(array: &mut [T], index: usize) {
+    let mut i = index;
+    while array[i] > array[(i - 1) / 2] {
+        (array[i], array[(i - 1) / 2]) = (array[(i - 1) / 2], array[i]);
+        i = (i - 1) / 2;
+    }
+}
