@@ -1,4 +1,4 @@
-use super::merge;
+use super::{heap_insert, merge};
 
 pub struct Sort<'a, T>
 where
@@ -109,6 +109,10 @@ where
         self.merge_sort_recursion(l, m);
         self.merge_sort_recursion(m + 1, r);
         merge(self.array, l, m, r);
+        self
+    }
+
+    pub fn heap_sort(&mut self) -> &mut Self {
         self
     }
 }

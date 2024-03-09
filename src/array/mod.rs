@@ -48,3 +48,22 @@ fn heap_insert<T: PartialOrd + Copy>(array: &mut [T], index: usize) {
         i = (i - 1) / 2;
     }
 }
+
+fn heapify<T: PartialOrd + Copy>(array: &mut [T], index: usize, size: usize) {
+    let mut i = index;
+    let mut l = i * 2 + 1;
+    while l < size {
+        let mut best = if l + 1 < size && array[l + 1] > array[l] {
+            l + 1
+        } else {
+            l
+        };
+        best = if array[i] > array[best] { i } else { best };
+        if best == index {
+            break;
+        }
+        (array[i], array[best]) = (array[best], array[i]);
+        i = best;
+        l = i * 2 + 1;
+    }
+}
