@@ -42,10 +42,12 @@ fn merge<T: PartialOrd + Copy>(array: &mut [T], l: usize, m: usize, r: usize) {
 }
 
 fn heap_insert<T: PartialOrd + Copy>(array: &mut [T], index: usize) {
-    let mut i = index;
-    while array[i] > array[(i - 1) / 2] {
-        (array[i], array[(i - 1) / 2]) = (array[(i - 1) / 2], array[i]);
-        i = (i - 1) / 2;
+    let mut i = index as isize;
+    let mut f_i = if i - 1 >= 0 { (i - 1) / 2 } else { 0 };
+    while array[i as usize] > array[f_i as usize] {
+        (array[i as usize], array[f_i as usize]) = (array[f_i as usize], array[i as usize]);
+        i = f_i;
+        f_i = if i - 1 >= 0 { (i - 1) / 2 } else { 0 };
     }
 }
 

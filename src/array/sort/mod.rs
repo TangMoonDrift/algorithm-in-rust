@@ -1,4 +1,4 @@
-use super::{heap_insert, merge};
+use super::{heap_insert, heapify, merge};
 
 pub struct Sort<'a, T>
 where
@@ -113,6 +113,19 @@ where
     }
 
     pub fn heap_sort(&mut self) -> &mut Self {
+        let len = self.array.len();
+        if len <= 1 {
+            return self;
+        }
+        for i in 0..len {
+            heap_insert(&mut self.array, i);
+        }
+        let mut size = len;
+        while size > 1 {
+            size -= 1;
+            self.swap(0, size);
+            heapify(&mut self.array, 0, size)
+        }
         self
     }
 }
