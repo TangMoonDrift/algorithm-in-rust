@@ -36,7 +36,7 @@ pub fn missing_number(nums: Vec<i32>) -> i32 {
  * 给你一个 非空 整数数组 nums ，除了某个元素只出现一次以外，其余每个元素均出现两次(或偶数次)。找出那个只出现了一次的元素。
  * 你必须设计并实现线性时间复杂度的算法来解决此问题，且该算法只使用常量额外空间。
  */
-pub fn single_number(nums: Vec<i32>) -> i32 {
+pub fn single_number_i(nums: Vec<i32>) -> i32 {
     let mut eor = 0;
     nums.into_iter().for_each(|num| {
         eor ^= num;
@@ -45,12 +45,38 @@ pub fn single_number(nums: Vec<i32>) -> i32 {
 }
 
 /**
+ * https://leetcode.cn/problems/single-number-ii/
+ * 给你一个整数数组 nums ，除某个元素仅出现 一次 外，其余每个元素都恰出现 三次 。
+ * 请你找出并返回那个只出现了一次的元素。
+ * 你必须设计并实现线性时间复杂度的算法且使用常数级空间来解决此问题。
+ */
+pub fn single_number_ii(nums: Vec<i32>) -> i32 {
+    let find = |array: &Vec<i32>, m: usize| {
+        let mut bits = [0; 32];
+        for num in array {
+            for i in 0..32 {
+                bits[i] += (num >> i) & 1;
+            }
+        }
+        let mut ans = 0;
+        for i in 0..32 {
+            if bits[i] % m as i32 != 0 {
+                ans |= 1 << i;
+            }
+        }
+        ans
+    };
+
+    find(&nums, 3)
+}
+
+/**
  * https://leetcode.cn/problems/single-number-iii/description/
  * 给你一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。
  * 找出只出现一次的那两个元素。你可以按 任意顺序 返回答案。
  * 你必须设计并实现线性时间复杂度的算法且仅使用常量额外空间来解决此问题。
  */
-pub fn two_single_number(nums: Vec<i32>) -> Vec<i32> {
+pub fn two_single_number_iii(nums: Vec<i32>) -> Vec<i32> {
     let eor_1 = nums.iter().fold(0, |r, v| r ^ v);
     let right_one = eor_1 & -eor_1;
     let mut eor_2 = 0;
