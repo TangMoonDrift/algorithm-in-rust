@@ -30,3 +30,16 @@ pub fn missing_number(nums: Vec<i32>) -> i32 {
     eor_all ^= n;
     eor_all ^ eor_has
 }
+
+/**
+ * https://leetcode.cn/problems/single-number/description/
+ * 给你一个 非空 整数数组 nums ，除了某个元素只出现一次以外，其余每个元素均出现两次(或偶数次)。找出那个只出现了一次的元素。
+ * 你必须设计并实现线性时间复杂度的算法来解决此问题，且该算法只使用常量额外空间。
+ */
+pub fn single_number(nums: Vec<i32>) -> i32 {
+    let mut eor = 0;
+    nums.into_iter().for_each(|num| {
+        eor ^= num;
+    });
+    eor
+}
