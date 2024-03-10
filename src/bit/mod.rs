@@ -87,3 +87,11 @@ pub fn two_single_number_iii(nums: Vec<i32>) -> Vec<i32> {
     }
     vec![eor_1 ^ eor_2, eor_2]
 }
+
+/**
+ * https://leetcode.cn/problems/power-of-two/
+ * 给你一个整数 n，请你判断该整数是否是 2 的幂次方。如果是，返回 true ；否则，返回 false 。
+ */
+pub fn is_power_of_two(n: i32) -> bool {
+    n > 0 && n == (n & -n)
+}
