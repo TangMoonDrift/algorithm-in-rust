@@ -43,3 +43,21 @@ pub fn single_number(nums: Vec<i32>) -> i32 {
     });
     eor
 }
+
+/**
+ * https://leetcode.cn/problems/single-number-iii/description/
+ * 给你一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。
+ * 找出只出现一次的那两个元素。你可以按 任意顺序 返回答案。
+ * 你必须设计并实现线性时间复杂度的算法且仅使用常量额外空间来解决此问题。
+ */
+pub fn two_single_number(nums: Vec<i32>) -> Vec<i32> {
+    let eor_1 = nums.iter().fold(0, |r, v| r ^ v);
+    let right_one = eor_1 & -eor_1;
+    let mut eor_2 = 0;
+    for num in &nums {
+        if (right_one & num) == 0 {
+            eor_2 ^= num;
+        }
+    }
+    vec![eor_1 ^ eor_2, eor_2]
+}
