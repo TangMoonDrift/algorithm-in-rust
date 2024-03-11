@@ -95,3 +95,15 @@ pub fn two_single_number_iii(nums: Vec<i32>) -> Vec<i32> {
 pub fn is_power_of_two(n: i32) -> bool {
     n > 0 && n == (n & -n)
 }
+
+/**
+ * https://leetcode.cn/problems/bitwise-and-of-numbers-range/description/
+ * 给你两个整数 left 和 right ，表示区间 [left, right] ，返回此区间内所有数字 按位与 的结果（包含 left 、right 端点）。
+ */
+pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
+    let mut ans = right;
+    while left < ans {
+        ans -= ans & -ans;
+    }
+    ans
+}
