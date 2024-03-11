@@ -107,3 +107,17 @@ pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
     }
     ans
 }
+
+/**
+ * https://leetcode.cn/problems/reverse-bits/
+ * 颠倒给定的 32 位无符号整数的二进制位。
+ */
+pub fn reverse_bits(x: i32) -> i32 {
+    let mut n = x;
+    n = ((n & 0xaaaaaaaa_u32 as i32) >> 1) | ((n & 0x55555555) << 1);
+    n = ((n & 0xcccccccc_u32 as i32) >> 2) | ((n & 0x33333333) << 2);
+    n = ((n & 0xf0f0f0f0_u32 as i32) >> 4) | ((n & 0x0f0f0f0f) << 4);
+    n = ((n & 0xff00ff00_u32 as i32) >> 8) | ((n & 0x00ff00ff) << 8);
+    n = (n >> 16) | (n << 16);
+    n
+}
