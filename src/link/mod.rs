@@ -45,45 +45,25 @@ pub fn add_two_numbers(
  * k 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
  * 注意：你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
  */
-pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
-    let mut remain = head;
-    let mut dummy = Box::new(ListNode::new(0));
-    let mut tail = &mut dummy;
-    while remain.is_some() {
-        let (new_head, new_remain) = reverse_one(remain, k);
-        remain = new_remain;
-        tail.next = new_head;
-        while tail.next.as_ref().is_some() {
-            tail = tail.next.as_mut().unwrap();
-        }
-    }
-
-    dummy.next
-}
-
-// 反转一次，返回反转后的head和remain
-// 如果为最后一次不足以反转，remain为None
-fn reverse_one(
-    head: Option<Box<ListNode>>,
-    k: i32,
-) -> (Option<Box<ListNode>>, Option<Box<ListNode>>) {
-    let mut pre = head.as_ref();
+pub fn reverse_k_group(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+    let mut next_head = &mut head;
+    // 获取下一轮头结点
     for _ in 0..k {
-        if pre.is_none() {
-            return (head, None);
+        if let Some(node) = next_head.as_mut() {
+            next_head = &mut node.next;
+        } else {
+            return head;
         }
-        pre = pre.unwrap().next.as_ref();
     }
-
-    let mut remain = head;
-    let mut dummy = ListNode::new(0);
+    // 获取除本轮结果
+    let mut new_head = reverse_k_group(next_head.take(), k);
+    // 翻转本轮k个节点
     for _ in 0..k {
-        if let Some(mut n) = remain {
-            remain = n.next.take();
-            n.next = dummy.next.take();
-            dummy.next = Some(n);
+        if let Some(mut node) = head {
+            head = node.next.take();
+            node.next = new_head.take();
+            new_head = Some(node);
         }
     }
-
-    (dummy.next, remain)
+    new_head
 }
