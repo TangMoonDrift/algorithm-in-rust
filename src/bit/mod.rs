@@ -121,3 +121,32 @@ pub fn reverse_bits(x: i32) -> i32 {
     n = (n >> 16) | (n << 16);
     n
 }
+
+pub fn binary_add(mut a: i32, mut b: i32) -> i32 {
+    let mut ans = a;
+    while b != 0 {
+        ans = a ^ b;
+        b = (a & b) << 1;
+        a = ans;
+    }
+    ans
+}
+
+pub fn binary_minus(a: i32, b: i32) -> i32 {
+    let neg = |x: i32| {
+        return binary_add(!x, 1);
+    };
+    binary_add(a, neg(b))
+}
+
+pub fn binary_mul(mut a: i32, mut b: i32) -> i32 {
+    let mut ans = 0;
+    while b != 0 {
+        if (b & 1) != 0 {
+            ans = binary_add(ans, a);
+        }
+        b >>= 1;
+        a <<= 1;
+    }
+    ans
+}
