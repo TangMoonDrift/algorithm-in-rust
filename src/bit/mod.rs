@@ -160,11 +160,11 @@ pub fn binary_div(a: i32, b: i32) -> i32 {
     let mut ans = 0;
     let mut i = 30;
     while i >= 0 {
-        i = binary_minus(i, 1);
         if (x >> i) >= y {
             ans |= 1 << i;
             x = binary_minus(x, y << i);
         }
+        i = binary_minus(i, 1);
     }
     let ans = if (a < 0) ^ (b < 0) { neg(ans) } else { ans };
     ans
