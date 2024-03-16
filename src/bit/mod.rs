@@ -150,3 +150,22 @@ pub fn binary_mul(mut a: i32, mut b: i32) -> i32 {
     }
     ans
 }
+
+pub fn binary_div(a: i32, b: i32) -> i32 {
+    let neg = |x: i32| {
+        return binary_add(!x, 1);
+    };
+    let mut x = if a > 0 { a } else { neg(a) };
+    let y = if b > 0 { b } else { neg(b) };
+    let mut ans = 0;
+    let mut i = 30;
+    while i >= 0 {
+        i = binary_minus(i, 1);
+        if (x >> i) >= y {
+            ans |= 1 << i;
+            x = binary_minus(x, y << i);
+        }
+    }
+    let ans = if (a < 0) ^ (b < 0) { neg(ans) } else { ans };
+    ans
+}
