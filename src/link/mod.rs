@@ -67,3 +67,55 @@ pub fn reverse_k_group(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<Li
     }
     new_head
 }
+
+pub fn is_palindrome(head: Option<Box<ListNode>>) -> bool {
+    if head.is_none() || head.as_ref().unwrap().next.is_none() {
+        return true;
+    }
+    fn is_palindrome_help(
+        origin_head: Option<Box<ListNode>>,
+        new_head: Option<Box<ListNode>>,
+    ) -> bool {
+        match (origin_head, new_head) {
+            (None, None) | (None, Some(_)) | (Some(_), None) => true,
+            (Some(origin_head), Some(new_head)) => {
+                if origin_head.val == new_head.val {
+                    is_palindrome_help(origin_head.next, new_head.next)
+                } else {
+                    false
+                }
+            }
+        }
+    }
+
+    fn revert_link(
+        pre: Option<Box<ListNode>>,
+        mut cur: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        if cur.is_none() {
+            return pre;
+        }
+        use std::borrow::BorrowMut;
+        let next = std::mem::replace(cur.as_mut().unwrap().next.borrow_mut(), pre);
+        revert_link(cur, next)
+    }
+
+    let (mut slow, mut fast) = (&head, &head);
+
+    while fast.is_some() {
+        fast = fast
+            .as_ref()
+            .unwrap()
+            .next
+            .as_ref()
+            .map(|x| &x.next)
+            .unwrap_or(&None);
+        slow = slow.as_ref().map(|x| &x.next).unwrap();
+    }
+    let s = slow as *const Option<Box<ListNode>> as *mut Option<Box<ListNode>>;
+    let slow = unsafe { (*s).take() };
+
+    let new_head = revert_link(None, slow);
+
+    is_palindrome_help(head, new_head)
+}
