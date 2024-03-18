@@ -50,3 +50,31 @@ pub fn level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
     }
     ans
 }
+
+/**
+ * https://leetcode.cn/problems/maximum-width-of-binary-tree/description/
+ */
+pub fn width_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+    if root.is_none() {
+        return 0;
+    }
+
+    let mut ans = 1;
+
+    let mut queue = vec![(0, root)];
+    while !queue.is_empty() {
+        ans = ans.max(queue.last().unwrap().0 - queue[0].0 + 1);
+        let mut tmp = vec![];
+        for (i, r) in queue {
+            let r = r.as_ref().unwrap().borrow();
+            if r.left.is_some() {
+                tmp.push((i * 2, r.left.clone()));
+            }
+            if r.right.is_some() {
+                tmp.push((i * 2 + 1, r.right.clone()));
+            }
+        }
+        queue = tmp;
+    }
+    ans
+}
