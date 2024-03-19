@@ -78,3 +78,36 @@ pub fn width_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
     }
     ans
 }
+
+/**
+ * https://leetcode.cn/problems/minimum-depth-of-binary-tree/description/
+ */
+pub fn min_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+    if root.is_none() {
+        return 0;
+    }
+
+    let mut left = None;
+    let mut right = None;
+    if let Some(p) = root {
+        left = p.borrow_mut().left.take();
+        right = p.borrow_mut().right.take();
+    }
+
+    if left.is_none() && right.is_none() {
+        return 1;
+    }
+
+    let mut l = i32::MAX;
+    let mut r = i32::MAX;
+
+    if left.is_some() {
+        l = Self::min_depth(left);
+    }
+
+    if right.is_some() {
+        r = Self::min_depth(right);
+    }
+
+    l.min(r) + 1
+}
