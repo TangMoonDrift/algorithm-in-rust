@@ -166,3 +166,25 @@ pub fn lowest_common_ancestor_in_a_search_tree(
     }
     ans
 }
+
+/**
+ * https://leetcode.cn/problems/balanced-binary-tree/description/
+ */
+pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+    fn get_heigt(node: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        if let Some(x) = node {
+            let left_height = get_heigt(&x.borrow_mut().left.take());
+            if left_height == -1 {
+                return -1;
+            }
+            let right_height = get_heigt(&x.borrow_mut().right.take());
+            if right_height == -1 || (left_height - right_height).abs() > 1 {
+                return -1;
+            }
+            return left_height.max(right_height) + 1;
+        }
+        0
+    }
+
+    get_heigt(&root) != -1
+}
