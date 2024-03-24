@@ -111,3 +111,32 @@ pub fn min_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
 
     l.min(r) + 1
 }
+
+/** https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/description/ */
+pub fn lowest_common_ancestor(
+    root: Option<Rc<RefCell<TreeNode>>>,
+    p: Option<Rc<RefCell<TreeNode>>>,
+    q: Option<Rc<RefCell<TreeNode>>>,
+) -> Option<Rc<RefCell<TreeNode>>> {
+    if let Some(x) = root.as_ref() {
+        if x.borrow().val == p.as_ref().unwrap().borrow().val
+            || x.borrow().val == q.as_ref().unwrap().borrow().val
+        {
+            return Some(Rc::clone(x));
+        }
+        let p_cloned = Some(p.as_ref().unwrap().clone());
+        let q_cloned = Some(q.as_ref().unwrap().clone());
+
+        let left = Self::lowest_common_ancestor(x.borrow_mut().left.take(), p_cloned, q_cloned);
+        let right = Self::lowest_common_ancestor(x.borrow_mut().right.take(), p, q);
+        if left.is_none() {
+            right
+        } else if right.is_none() {
+            left
+        } else {
+            Some(Rc::clone(x))
+        }
+    } else {
+        None
+    }
+}
