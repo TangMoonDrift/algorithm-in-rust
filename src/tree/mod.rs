@@ -188,3 +188,24 @@ pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
 
     get_heigt(&root) != -1
 }
+
+/**
+ * https://leetcode.cn/problems/validate-binary-search-tree/description/
+ */
+pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+    let (tx, rx) = mpsc::channel();
+    let (tx2, rx2) = mpsc::channel();
+    fn dfs(node: Option<Rc<RefCell<TreeNode>>>, tx: &Sender<i32>, tx2: &Sender<i32>) {
+        if node.is_none() {
+            return;
+        }
+        dfs(node.as_ref().unwrap().borrow().left.clone(), tx, tx2);
+        tx.send(node.as_ref().unwrap().borrow().val);
+        tx2.send(node.as_ref().unwrap().borrow().val);
+        dfs(node.as_ref().unwrap().borrow().right.clone(), tx, tx2);
+    }
+    dfs(root, &tx, &tx2);
+    drop(tx);
+    drop(tx2);
+    return rx.iter().zip(rx2.iter().skip(1)).all(|(a, b)| a < b);
+}
