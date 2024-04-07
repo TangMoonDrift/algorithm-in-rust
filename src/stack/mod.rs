@@ -86,6 +86,26 @@ impl<T: Clone> Iterator for IntoIter<T> {
     }
 }
 
+struct Iter<'a, T: 'a> {
+    stack: Vec<&'a T>,
+}
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.stack.pop()
+    }
+}
+
+struct IterMut<'a, T: 'a> {
+    stack: Vec<&'a mut T>,
+}
+impl<'a, T> Iterator for IterMut {
+    type Item = &'a mut T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.stack.pop()
+    }
+}
+
 mod BasicCauculator {}
 
 #[cfg(test)]
