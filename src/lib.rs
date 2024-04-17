@@ -47,7 +47,7 @@ fn lcm(mut m: usize, mut n: usize) -> usize {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use crate::*;
 
     #[test]
