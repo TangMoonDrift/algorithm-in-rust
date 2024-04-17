@@ -37,13 +37,28 @@ pub fn gcd(mut m: usize, mut n: usize) -> usize {
     }
 }
 
+fn lcm(mut m: usize, mut n: usize) -> usize {
+    if m < n {
+        m ^= n;
+        n ^= m;
+        m ^= n;
+    }
+    m / gcd(m, n) * n
+}
+
 #[cfg(test)]
 mod test {
-    use crate::gcd;
+    use crate::*;
 
     #[test]
     fn check_gcd() {
         assert_eq!(gcd(72, 30), 6);
         assert_eq!(gcd(30, 72), 6);
+    }
+
+    #[test]
+    fn check_lcm() {
+        assert_eq!(lcm(72, 30), 360);
+        assert_eq!(lcm(30, 72), 360);
     }
 }
