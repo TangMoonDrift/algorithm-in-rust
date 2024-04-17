@@ -77,3 +77,14 @@ pub fn find_peak_element(nums: Vec<i32>) -> i32 {
     }
     ans
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn check_lis() {
+        assert_eq!(lis(&[1, 2, 3, 1, 2, 3, 4, 5, 4, 3]), 5);
+        assert_eq!(lis(&[1, 3, 2, 1, 3, 4, 1, 5, 7, 9]), 6);
+    }
+}
