@@ -1,3 +1,5 @@
+pub mod trie;
+
 use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
