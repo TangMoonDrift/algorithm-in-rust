@@ -1,4 +1,5 @@
 //! 前缀树
+use std::collections::HashSet;
 
 pub struct Trie {
     pass: usize,
@@ -119,5 +120,59 @@ impl Trie {
             }
             node = node.nexts[i].as_mut().unwrap();
         }
+    }
+}
+
+/**
+* https://leetcode.cn/problems/maximum-xor-of-two-numbers-in-an-array/description/
+* 给你一个整数数组 nums ，返回 nums[i] XOR nums[j] 的最大运算结果，其中 0 ≤ i ≤ j < n 。
+* 示例 1：
+
+* 输入：nums = [3,10,5,25,2,8]
+* 输出：28
+* 解释：最大运算结果是 5 XOR 25 = 28.
+* 示例 2：
+
+* 输入：nums = [14,70,53,83,49,91,36,80,92,51,66,70]
+* 输出：127
+
+* 提示：
+* 1 <= nums.length <= 2 * 105
+* 0 <= nums[i] <= 231 - 1
+*/
+pub fn find_maximum_xor(nums: Vec<i32>) -> i32 {
+    let mx = nums.iter().max().unwrap();
+    let high_bit = 31 - mx.leading_zeros() as i32;
+
+    let mut ans = 0;
+    let mut mask = 0;
+    let mut seen = HashSet::new();
+
+    for i in (0..=high_bit).rev() {
+        seen.clear();
+        mask |= 1 << i;
+        let new_ans = ans | (1 << i);
+        for &x in &nums {
+            let x = x & mask;
+            if seen.contains(&(new_ans ^ x)) {
+                ans = new_ans;
+                break;
+            }
+            seen.insert(x);
+        }
+    }
+    ans
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_find_maximum_xor() {
+        assert_eq!(find_maximum_xor(vec![3, 10, 5, 25, 2, 8]), 28);
+        assert_eq!(
+            find_maximum_xor(vec![14, 70, 53, 83, 49, 91, 36, 80, 92, 51, 66, 70]),
+            127
+        );
     }
 }
