@@ -193,6 +193,34 @@ pub fn subarray_sum(nums: Vec<i32>, k: i32) -> i32 {
     ans
 }
 
+/**
+ * https://leetcode.cn/problems/longest-well-performing-interval/
+ */
+pub fn longest_wpi(hours: Vec<i32>) -> i32 {
+    if hours.is_empty() || hours.iter().all(|&x| x <= 8) {
+        return 0;
+    }
+
+    let mut map = HashMap::new();
+    let mut sum = 0;
+    let mut ans = 0;
+
+    for (index, x) in hours.iter().enumerate() {
+        sum += if *x > 8 { 1 } else { -1 };
+
+        if sum > 0 {
+            ans = index + 1;
+        } else if let Some(val) = map.get(&(sum - 1)) {
+            ans = ans.max(index - val);
+        }
+
+        if !map.contains_key(&sum) {
+            map.insert(sum, index);
+        }
+    }
+    ans as i32
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
