@@ -164,6 +164,35 @@ pub fn find_maximum_xor(nums: Vec<i32>) -> i32 {
     ans
 }
 
+/**
+ * https://leetcode.cn/problems/subarray-sum-equals-k/
+ */
+pub fn subarray_sum(nums: Vec<i32>, k: i32) -> i32 {
+    // 使用HashMap来存储从数组开始到当前位置的元素和及其出现的次数
+    let mut map: HashMap<i32, i32> = HashMap::new();
+    // 初始化答案为0
+    let mut ans = 0;
+    // 初始化sum为0的出现次数为1，为了处理从数组开始处的子数组
+    map.insert(0, 1);
+    // 初始化当前的元素和
+    let mut sum: i32 = 0;
+
+    // 遍历数组中的每个元素
+    for num in &nums {
+        // 更新当前的元素和，注意检查整数溢出
+        sum = sum.checked_add(*num).unwrap_or(0);
+        // 如果存在和为sum - k的前缀，更新答案
+        if let Some(val) = map.get(&(sum - k)) {
+            ans += *val;
+        }
+        // 更新HashMap中当前元素和的出现次数
+        *map.entry(sum).or_insert(0) += 1;
+    }
+
+    // 返回答案
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -174,5 +203,11 @@ mod tests {
             find_maximum_xor(vec![14, 70, 53, 83, 49, 91, 36, 80, 92, 51, 66, 70]),
             127
         );
+    }
+
+    #[test]
+    fn test_subarray_sum() {
+        assert_eq!(subarray_sum(vec![1, 1, 1], 2), 2);
+        assert_eq!(subarray_sum(vec![1, 2, 3], 3), 2);
     }
 }
