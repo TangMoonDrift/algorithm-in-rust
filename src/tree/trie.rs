@@ -221,6 +221,25 @@ pub fn longest_wpi(hours: Vec<i32>) -> i32 {
     ans as i32
 }
 
+/**
+ * https://leetcode.cn/problems/corporate-flight-bookings/
+ */
+pub fn corp_flight_bookings(bookings: Vec<Vec<i32>>, n: i32) -> Vec<i32> {
+    let flights_cnt = n as usize;
+    let mut ans = vec![0; flights_cnt + 2];
+
+    for booking in bookings {
+        ans[booking[0] as usize] += booking[2];
+        ans[booking[1] as usize + 1] -= booking[2];
+    }
+
+    for i in 1..(flights_cnt + 2) {
+        ans[i] += ans[i - 1];
+    }
+
+    ans[1..=flights_cnt].to_vec()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
