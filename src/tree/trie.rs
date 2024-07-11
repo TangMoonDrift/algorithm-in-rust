@@ -272,6 +272,68 @@ impl NumMatrix {
     }
 }
 
+pub fn largest1_bordered_square(grid: Vec<Vec<i32>>) -> i32 {
+    let n = grid.len() as i32;
+    let m = grid[0].len() as i32;
+    let mut tries = grid.clone();
+    let tries = bulid(n as usize, m as usize, tries);
+
+    if sum(&tries, 0, 0, n - 1, m - 1) == 0 {
+        return 0;
+    }
+
+    let mut ans: i32 = 1;
+
+    for a in 0..n {
+        for b in 0..m {
+            // (a,b)所有左上角点
+            //     (c,d)更大边长的右下角点，k是当前尝试的边长
+            let (mut c, mut d, mut k) = (a + ans, b + ans, ans + 1);
+            while c < n && d < m {
+                let outer_area = sum(&tries, a, b, c, d);
+                let inner_area = sum(&tries, a + 1, b + 1, c - 1, d - 1);
+                let perimeter = (k - 1) << 2;
+                if outer_area - inner_area == perimeter {
+                    ans = k;
+                }
+                c += 1;
+                d += 1;
+                k += 1;
+            }
+        }
+    }
+
+    fn bulid(n: usize, m: usize, mut tries: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        for i in 0..n {
+            for j in 0..m {
+                tries[i][j] += get(i as i32 - 1, j as i32, &tries)
+                    + get(i as i32, j as i32 - 1, &tries)
+                    - get(i as i32 - 1, j as i32 - 1, &tries);
+            }
+        }
+        tries
+    }
+
+    fn get(i: i32, j: i32, grid: &Vec<Vec<i32>>) -> i32 {
+        if i < 0 || j < 0 {
+            0
+        } else {
+            grid[i as usize][j as usize]
+        }
+    }
+
+    fn sum(g: &Vec<Vec<i32>>, a: i32, b: i32, c: i32, d: i32) -> i32 {
+        if a > c {
+            return 0;
+        } else {
+            return g[c as usize][d as usize] - get(c, b - 1, g) - get(a - 1, d, g)
+                + get(a - 1, b - 1, g);
+        }
+    }
+
+    ans * ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
