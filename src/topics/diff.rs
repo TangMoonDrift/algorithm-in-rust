@@ -198,3 +198,21 @@ pub fn possible_to_stamp(grid: Vec<Vec<i32>>, stamp_height: i32, stamp_width: i3
 
     return true;
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_possible_to_stamp() {
+        let grid: Vec<Vec<i32>> = vec![
+            vec![1, 0, 0, 0],
+            vec![1, 0, 0, 0],
+            vec![1, 0, 0, 0],
+            vec![1, 0, 0, 0],
+            vec![1, 0, 0, 0],
+        ];
+        let stamp_height = 4;
+        let stamp_width = 3;
+        assert_eq!(possible_to_stamp(grid, stamp_height, stamp_width), true);
+    }
+}
