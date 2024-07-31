@@ -67,24 +67,19 @@ pub fn length_of_longest_substring(s: String) -> i32 {
  */
 pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
     let len = gas.len();
-    let mut rest = vec![];
-    let (mut l, mut r, mut sum, mut count) = (0, 0, 0, 0);
-
-    for i in 0..len {
-        rest.push(gas[i] - cost[i]);
-    }
+    let (mut l, mut sum, mut count) = (0, 0, 0);
 
     while l < len {
         while sum >= 0 {
             if count == len {
                 return l as i32;
             }
-            r = (l + count) % len;
+            let r = (l + count) % len;
             count += 1;
-            sum += rest[r];
+            sum += gas[r] - cost[r];
         }
         count -= 1;
-        sum -= rest[l];
+        sum -= gas[l] - cost[l];
         l += 1;
     }
 
