@@ -57,6 +57,40 @@ pub fn length_of_longest_substring(s: String) -> i32 {
     ans
 }
 
+/**
+ * https://leetcode.cn/problems/minimum-window-substring/
+*/
+// pub fn min_window(s: String, t: String) -> String {}
+
+/**
+ * https://leetcode.cn/problems/gas-station/
+ */
+pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
+    let len = gas.len();
+    let mut rest = vec![];
+    let (mut l, mut r, mut sum, mut count) = (0, 0, 0, 0);
+
+    for i in 0..len {
+        rest.push(gas[i] - cost[i]);
+    }
+
+    while l < len {
+        while sum >= 0 {
+            if count == len {
+                return l as i32;
+            }
+            r = (l + count) % len;
+            count += 1;
+            sum += rest[r];
+        }
+        count -= 1;
+        sum -= rest[l];
+        l += 1;
+    }
+
+    -1
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
