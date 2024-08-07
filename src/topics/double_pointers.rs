@@ -1,11 +1,11 @@
 //! 双指针专题
 
 /**
+ * 475. 供暖器
  * https://leetcode.cn/problems/heaters/
  */
 pub fn find_radius(houses: Vec<i32>, heaters: Vec<i32>) -> i32 {
     let n = houses.len();
-    let m = heaters.len();
     let mut houses = houses.clone();
     houses.sort();
     let mut heaters = heaters.clone();
