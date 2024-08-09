@@ -110,3 +110,33 @@ pub fn smallest_distance_pair(nums: Vec<i32>, k: i32) -> i32 {
 
     answer
 }
+
+/**
+ * 2141. 同时运行 N 台电脑的最长时间
+ * https://leetcode.cn/problems/maximum-running-time-of-n-computers/
+ */
+pub fn max_run_time(n: i32, batteries: Vec<i32>) -> i64 {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_min_eating_speed() {
+        assert_eq!(min_eating_speed(vec![3, 6, 7, 11], 8), 4);
+        assert_eq!(min_eating_speed(vec![30, 11, 23, 4, 20], 5), 30);
+        assert_eq!(min_eating_speed(vec![30, 11, 23, 4, 20], 6), 23);
+    }
+
+    #[test]
+    fn test_split_array() {
+        assert_eq!(split_array(vec![7, 2, 5, 10, 8], 2), 15);
+        assert_eq!(split_array(vec![1, 2, 3, 4, 5], 2), 9);
+    }
+
+    #[test]
+    fn test_smallest_distance_pair() {
+        assert_eq!(smallest_distance_pair(vec![1, 3, 1], 1), 0);
+        assert_eq!(smallest_distance_pair(vec![1, 1, 1], 2), 0);
+        assert_eq!(smallest_distance_pair(vec![1, 6, 1], 3), 5);
+    }
+}
