@@ -35,6 +35,43 @@ pub fn min_eating_speed(piles: Vec<i32>, h: i32) -> i32 {
 
     l // 最终答案为 l，因为当 l > r 时跳出循环
 }
+
+/**
+ * 410. 分割数组的最大值
+ * https://leetcode.cn/problems/split-array-largest-sum/
+ */
+pub fn split_array(nums: Vec<i32>, k: i32) -> i32 {
+    let check = |aim: i32| -> bool {
+        let mut parts = 1;
+        let mut sum = 0;
+        for &num in &nums {
+            if sum + num <= aim {
+                sum += num;
+            } else {
+                // 新划分一段
+                if parts == k {
+                    return false;
+                }
+                parts += 1;
+                sum = num;
+            }
+        }
+        true
+    };
+
+    let mut right = nums.iter().sum::<i32>();
+    let mut left = (*nums.iter().max().unwrap() - 1).max((right - 1) / k);
+    while left + 1 < right {
+        let mid = left + (right - left) / 2;
+        if check(mid) {
+            right = mid;
+        } else {
+            left = mid;
+        }
+    }
+    right
+}
+
 /**719. 找出第 k 小的数对距离**
  * https://leetcode.cn/problems/find-k-th-smallest-pair-distance/
  */
