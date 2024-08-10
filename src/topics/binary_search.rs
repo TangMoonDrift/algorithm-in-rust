@@ -115,7 +115,22 @@ pub fn smallest_distance_pair(nums: Vec<i32>, k: i32) -> i32 {
  * 2141. 同时运行 N 台电脑的最长时间
  * https://leetcode.cn/problems/maximum-running-time-of-n-computers/
  */
-pub fn max_run_time(n: i32, batteries: Vec<i32>) -> i64 {}
+pub fn max_run_time(n: i32, batteries: Vec<i32>) -> i64 {
+    let mut batteries = batteries;
+    batteries.sort_unstable();
+    let mut sum = batteries.iter().fold(0, |acc, &x| acc + x as i64);
+    let mut n = n as i64;
+    let mut ans = 0;
+    for &x in batteries.iter().rev() {
+        if sum / n >= x as i64 {
+            ans = sum / n;
+            break;
+        }
+        sum -= x as i64;
+        n -= 1;
+    }
+    ans
+}
 
 #[cfg(test)]
 mod tests {
