@@ -64,9 +64,9 @@ pub fn first_missing_positive(nums: Vec<i32>) -> i32 {
     l + 1
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
-
     #[test]
     fn test_find_radius() {
         assert_eq!(find_radius(vec![1, 2, 3], vec![2]), 1);
