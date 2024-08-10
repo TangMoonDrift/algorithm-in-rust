@@ -154,4 +154,11 @@ mod tests {
         assert_eq!(smallest_distance_pair(vec![1, 1, 1], 2), 0);
         assert_eq!(smallest_distance_pair(vec![1, 6, 1], 3), 5);
     }
+
+    #[test]
+    fn test_max_run_time() {
+        assert_eq!(max_run_time(2, vec![3, 3, 3]), 4);
+        assert_eq!(max_run_time(2, vec![1, 1, 1, 1]), 2);
+        assert_eq!(max_run_time(5, vec![2, 1, 2, 1, 2, 1]), 7);
+    }
 }
