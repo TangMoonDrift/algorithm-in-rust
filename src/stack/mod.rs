@@ -1,3 +1,5 @@
+pub mod monotone_stack;
+
 #[derive(Debug)]
 struct Stack<T> {
     size: usize,
