@@ -28,7 +28,7 @@ pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
  * https://leetcode.cn/problems/sum-of-subarray-minimums/
  */
 pub fn sum_subarray_mins(arr: Vec<i32>) -> i32 {
-    const MOD: usize = 1000000007;
+    const MOD: usize = 10_0000_0007;
     let n = arr.len();
     let mut stack = vec![0; n];
     let mut ans: i64 = 0;
