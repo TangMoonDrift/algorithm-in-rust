@@ -175,3 +175,29 @@ pub fn remove_duplicate_letters(s: String) -> String {
 
     ans
 }
+
+/**
+ * 2289. 使数组按非递减顺序排列
+ * https://leetcode.cn/problems/steps-to-make-array-non-decreasing/description/
+ */
+pub fn total_steps(nums: Vec<i32>) -> i32 {
+    let n = nums.len();
+    let mut ans = 0;
+    let mut cur_turns = 0;
+    let mut top_index = 0;
+    let mut stack = [[0, 0]; 100001];
+
+    for i in (0..n).rev() {
+        cur_turns = 0;
+        while top_index > 0 && stack[top_index - 1][0] < nums[i] {
+            top_index -= 1;
+            cur_turns = (cur_turns + 1).max(stack[top_index][1]);
+        }
+        ans = ans.max(cur_turns);
+        stack[top_index][0] = nums[i];
+        stack[top_index][1] = cur_turns;
+        top_index += 1;
+    }
+
+    ans
+}
