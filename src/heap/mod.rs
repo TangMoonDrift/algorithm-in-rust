@@ -1,3 +1,8 @@
+pub mod max_heap;
+pub mod min_heap;
+pub use max_heap::MaxHeap;
+pub use min_heap::MinHeap;
+
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 
