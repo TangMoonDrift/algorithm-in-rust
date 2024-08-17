@@ -1,5 +1,39 @@
 //! 并查集专题
 
+pub struct UnionFind {
+    pub father: Vec<usize>,
+    pub size: Vec<usize>,
+}
+
+impl UnionFind {
+    pub fn new(n: usize) -> Self {
+        Self {
+            father: (0..n).collect(),
+            size: vec![1; n],
+        }
+    }
+
+    pub fn find(&mut self, x: usize) -> usize {
+        if self.father[x] != x {
+            self.father[x] = self.find(self.father[x]);
+        }
+        self.father[x]
+    }
+
+    pub fn union(&mut self, x: usize, y: usize) {
+        let fx = self.find(x);
+        let fy = self.find(y);
+        if fx != fy {
+            if self.size[fx] < self.size[fy] {
+                self.father[fx] = fy;
+                self.size[fy] += self.size[fx];
+            } else {
+                self.father[fy] = fx;
+            }
+        }
+    }
+}
+
 /**
  * 765. 情侣牵手
  * https://leetcode.cn/problems/couples-holding-hands/
