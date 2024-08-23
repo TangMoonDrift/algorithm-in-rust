@@ -37,6 +37,7 @@ pub fn gcd(mut m: i32, mut n: i32) -> i32 {
     }
 }
 
+// 求最小公倍数
 pub fn lcm(mut m: i32, mut n: i32) -> i32 {
     if m < n {
         m ^= n;
@@ -46,6 +47,7 @@ pub fn lcm(mut m: i32, mut n: i32) -> i32 {
     m / gcd(m, n) * n
 }
 
+// 求第 n 个神奇数字
 pub fn nth_magical_number(n: i32, a: i32, b: i32) -> i32 {
     let lcm = lcm(a, b) as i64;
     let (mut ans, mut l, mut r): (i64, i64, i64) = (0, 0, n as i64 * lcm);
