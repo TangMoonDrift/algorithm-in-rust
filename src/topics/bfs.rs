@@ -1,5 +1,7 @@
 //? 宽度优先遍历专题
 
+use std::cmp::Ordering;
+use std::collections::BinaryHeap;
 use std::collections::VecDeque;
 
 /**
@@ -112,4 +114,79 @@ pub fn min_cost(grid: Vec<Vec<i32>>) -> i32 {
     }
 
     -1
+}
+
+#[derive(Eq, PartialEq, Debug)]
+pub struct Node {
+    row: usize,
+    col: usize,
+    val: i32,
+}
+
+impl Ord for Node {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.val.cmp(&other.val) {
+            Ordering::Less => Ordering::Greater,
+            Ordering::Greater => Ordering::Less,
+            Ordering::Equal => Ordering::Equal,
+        }
+    }
+}
+
+impl PartialOrd for Node {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl Into<Node> for (usize, usize, i32) {
+    fn into(self) -> Node {
+        Node {
+            row: self.0,
+            col: self.1,
+            val: self.2,
+        }
+    }
+}
+
+pub fn trap_rain_water(mut height_map: Vec<Vec<i32>>) -> i32 {
+    if height_map.len() <= 2 || height_map[0].len() <= 2 {
+        return 0;
+    }
+    let mut heap: BinaryHeap<Node> = BinaryHeap::new();
+    let row = height_map.len();
+    let col = height_map[0].len();
+
+    for r in 0..row {
+        heap.push((r, 0, height_map[r][0]).into());
+        heap.push((r, col - 1, height_map[r][col - 1]).into());
+        height_map[r][0] = -1;
+        height_map[r][col - 1] = -1;
+    }
+    for c in 1..col - 1 {
+        heap.push((row - 1, c, height_map[row - 1][c]).into());
+        heap.push((0, c, height_map[0][c]).into());
+        height_map[row - 1][c] = -1;
+        height_map[0][c] = -1;
+    }
+
+    let mut sum: i32 = 0;
+    let pos: Vec<(i32, i32)> = vec![(0, 1), (0, -1), (1, 0), (-1, 0)];
+
+    while !heap.is_empty() {
+        let node = heap.pop().unwrap();
+        for i in 0..4 {
+            let temp_r = (node.row as i32 + pos[i].0) as usize;
+            let temp_c = (node.col as i32 + pos[i].1) as usize;
+            if temp_r < row && temp_c < col && height_map[temp_r][temp_c] >= 0 {
+                if height_map[temp_r][temp_c] < node.val {
+                    sum = sum + node.val - height_map[temp_r][temp_c];
+                    heap.push((temp_r, temp_c, node.val).into());
+                } else {
+                    heap.push((temp_r, temp_c, height_map[temp_r][temp_c]).into());
+                }
+                height_map[temp_r][temp_c] = -1;
+            }
+        }
+    }
+    sum
 }
