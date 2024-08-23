@@ -7,20 +7,37 @@
 pub fn num_decodings(s: String) -> i32 {
     let s = s.as_bytes();
     let n = s.len();
-    let mut dp = vec![0; n + 1];
 
-    dp[n] = 1;
+    // let mut dp = vec![0; n + 1];
+    // dp[n] = 1;
+    // for i in (0..n).rev() {
+    //     if s[i] == b'0' {
+    //         dp[i] = 0;
+    //     } else {
+    //         dp[i] = dp[i + 1];
+    //         if i + 1 < n && (s[i] == b'1' || s[i] == b'2' && s[i + 1] <= b'6') {
+    //             dp[i] += dp[i + 2];
+    //         }
+    //     }
+    // }
 
+    // dp[0]
+
+    let mut next_next = 0;
+    let mut next = 1;
     for i in (0..n).rev() {
+        let mut cur;
         if s[i] == b'0' {
-            dp[i] = 0;
+            cur = 0;
         } else {
-            dp[i] = dp[i + 1];
+            cur = next;
             if i + 1 < n && (s[i] == b'1' || s[i] == b'2' && s[i + 1] <= b'6') {
-                dp[i] += dp[i + 2];
+                cur += next_next;
             }
         }
+        next_next = next;
+        next = cur;
     }
 
-    dp[0]
+    next
 }
