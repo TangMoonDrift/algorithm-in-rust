@@ -41,3 +41,30 @@ pub fn num_decodings(s: String) -> i32 {
 
     next
 }
+
+/**
+ * 32. 最长有效括号
+ * https://leetcode.cn/problems/longest-valid-parentheses/description/
+ */
+pub fn longest_valid_parentheses(s: String) -> i32 {
+    let n = s.len();
+    let chars: Vec<char> = s.chars().collect();
+
+    let mut dp = vec![0; n];
+    let mut ans = 0;
+
+    for i in 1..n {
+        if chars[i] == ')' {
+            let index = (i - dp[i - 1] - 1) as i32;
+            if index >= 0 && chars[index as usize] == '(' {
+                dp[i] = dp[i - 1] + 2;
+                if index >= 1 {
+                    dp[i] += dp[index as usize - 1]
+                }
+            }
+        }
+        ans = ans.max(dp[i] as i32);
+    }
+
+    ans
+}
