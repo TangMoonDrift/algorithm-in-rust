@@ -27,3 +27,17 @@ pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
 
     dp[n - 1]
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_min_path_sum() {
+        assert_eq!(
+            min_path_sum(vec![vec![1, 3, 1], vec![1, 5, 1], vec![4, 2, 1]]),
+            7
+        );
+        assert_eq!(min_path_sum(vec![vec![1, 2, 3], vec![4, 5, 6]]), 12);
+    }
+}
