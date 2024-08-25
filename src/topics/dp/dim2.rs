@@ -48,6 +48,41 @@ pub fn num_distinct(s: String, t: String) -> i32 {
     dp[m]
 }
 
+/**
+ * 72. 编辑距离
+ * https://leetcode.cn/problems/edit-distance/description/
+ */
+pub fn min_distance(word1: String, word2: String) -> i32 {
+    fn f(word1: Vec<char>, word2: Vec<char>, a: usize, b: usize, c: usize) -> i32 {
+        let n = word1.len();
+        let m = word2.len();
+        let mut dp = vec![0; m + 1];
+
+        for j in 1..=m {
+            dp[j] = j * a;
+        }
+
+        let (mut left_up, mut backup): (usize, usize);
+        for i in 1..=n {
+            left_up = (i - 1) * b;
+            dp[0] = i * b;
+            for j in 1..=m {
+                backup = dp[j];
+                if word1[i - 1] == word2[j - 1] {
+                    dp[j] = left_up;
+                } else {
+                    dp[j] = (dp[j] + b).min((dp[j - 1] + a).min(left_up + c));
+                }
+                left_up = backup;
+            }
+        }
+
+        dp[m] as i32
+    }
+
+    f(word1.chars().collect(), word2.chars().collect(), 1, 1, 1)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
