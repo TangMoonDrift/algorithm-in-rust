@@ -101,4 +101,13 @@ mod tests {
         assert_eq!(num_distinct("rabbbit".to_string(), "rabbit".to_string()), 3);
         assert_eq!(num_distinct("babgbag".to_string(), "bag".to_string()), 5);
     }
+
+    #[test]
+    fn test_min_distance() {
+        assert_eq!(min_distance("horse".to_string(), "ros".to_string()), 3);
+        assert_eq!(
+            min_distance("intention".to_string(), "execution".to_string()),
+            5
+        );
+    }
 }
