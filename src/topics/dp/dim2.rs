@@ -28,6 +28,26 @@ pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
     dp[n - 1]
 }
 
+/**
+ * 115. 不同的子序列
+ * https://leetcode.cn/problems/distinct-subsequences/description/
+ */
+pub fn num_distinct(s: String, t: String) -> i32 {
+    let t: Vec<char> = t.chars().collect();
+    let m = t.len();
+
+    let mut dp = vec![0; m + 1];
+    dp[0] = 1;
+
+    for c in s.chars() {
+        for i in (1..=m).rev() {
+            dp[i] += if c == t[i - 1] { dp[i - 1] } else { 0 };
+        }
+    }
+
+    dp[m]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -39,5 +59,11 @@ mod tests {
             7
         );
         assert_eq!(min_path_sum(vec![vec![1, 2, 3], vec![4, 5, 6]]), 12);
+    }
+
+    #[test]
+    fn test_num_distinct() {
+        assert_eq!(num_distinct("rabbbit".to_string(), "rabbit".to_string()), 3);
+        assert_eq!(num_distinct("babgbag".to_string(), "bag".to_string()), 5);
     }
 }
