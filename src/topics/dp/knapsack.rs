@@ -77,6 +77,28 @@ pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
     sub_set(&nums, (target + sum) / 2)
 }
 
+/**
+ * 1049. 最后一块石头的重量 II
+ * https://leetcode.cn/problems/last-stone-weight-ii/description/
+ */
+pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
+    let sum: i32 = stones.iter().sum();
+
+    fn near(stones: &Vec<i32>, t: usize) -> i32 {
+        let mut dp = vec![0; t + 1];
+
+        for &stone in stones {
+            for i in (stone as usize..=t).rev() {
+                dp[i] = dp[i].max(dp[i - stone as usize] + stone);
+            }
+        }
+
+        dp[t]
+    }
+
+    sum - near(&stones, (sum / 2) as usize) * 2
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -85,5 +107,11 @@ mod tests {
     fn test_find_target_sum_ways() {
         assert_eq!(find_target_sum_ways(vec![1, 1, 1, 1, 1], 3), 5);
         assert_eq!(find_target_sum_ways(vec![1], 1), 1);
+    }
+
+    #[test]
+    fn test_last_stone_weight_ii() {
+        assert_eq!(last_stone_weight_ii(vec![2, 7, 4, 1, 8, 1]), 1);
+        assert_eq!(last_stone_weight_ii(vec![31, 26, 33, 21, 40]), 5);
     }
 }
