@@ -18,6 +18,25 @@ pub fn largest_number(mut nums: Vec<i32>) -> String {
 }
 
 /**
+ * 1029. 两地调度
+ * https://leetcode.cn/problems/two-city-scheduling/description/
+ */
+pub fn two_city_sched_cost(costs: Vec<Vec<i32>>) -> i32 {
+    let n = costs.len();
+    let m = n / 2;
+
+    let mut diff = costs
+        .iter()
+        .map(|prices| prices[1] - prices[0])
+        .collect::<Vec<i32>>();
+    diff.sort_unstable_by(|a, b| a.cmp(b));
+
+    let sorted_diff = &diff[..m].iter().sum::<i32>();
+
+    costs.iter().map(|prices| prices[0]).sum::<i32>() + sorted_diff
+}
+
+/**
  * https://leetcode.cn/problems/minimum-number-of-days-to-eat-n-oranges/description/
 */
 pub fn min_days(n: i32) -> i32 {
