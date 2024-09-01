@@ -4,15 +4,21 @@ use std::collections::{BinaryHeap, HashMap};
 use utils::power;
 
 /**
- * 题目描述：https://leetcode.cn/problems/minimum-number-of-days-to-eat-n-oranges/description/
- * 厨房里总共有 n 个橘子，你决定每一天选择如下方式之一吃这些橘子：
- *
- * 吃掉一个橘子。
- * 如果剩余橘子数 n 能被 2 整除，那么你可以吃掉 n/2 个橘子。
- * 如果剩余橘子数 n 能被 3 整除，那么你可以吃掉 2*(n/3) 个橘子。
- * 每天你只能从以上 3 种方案中选择一种方案。
+ * 179. 最大数
+ * https://leetcode.cn/problems/largest-number/description/
+ */
+pub fn largest_number(mut nums: Vec<i32>) -> String {
+    nums.sort_unstable_by(|&a, &b| format!("{}{}", b, a).cmp(&format!("{}{}", a, b)));
 
- * 请你返回吃掉所有 n 个橘子的最少天数。
+    if nums[0] == 0 {
+        return "0".to_string();
+    }
+
+    nums.iter().map(|&num| num.to_string()).collect::<String>()
+}
+
+/**
+ * https://leetcode.cn/problems/minimum-number-of-days-to-eat-n-oranges/description/
 */
 pub fn min_days(n: i32) -> i32 {
     let mut dp = HashMap::new();
@@ -33,13 +39,7 @@ pub fn min_days(n: i32) -> i32 {
 }
 
 /**
- * 题目描述：https://leetcode.cn/problems/course-schedule-iii/description/
- * 这里有 n 门不同的在线课程，按从 1 到 n 编号。给你一个数组 courses ，
- * 其中 courses[i] = [durationi, lastDayi] 表示第 i 门课将会 持续 上 durationi 天课，
- * 并且必须在不晚于 lastDayi 的时候完成。
- *
- * 你的学期从第 1 天开始。且不能同时修读两门及两门以上的课程。
- * 返回你最多可以修读的课程数目。
+ * https://leetcode.cn/problems/course-schedule-iii/description/
  */
 pub fn schedule_course(courses: Vec<Vec<i32>>) -> i32 {
     let mut courses: Vec<_> = courses
@@ -89,9 +89,8 @@ pub fn max_value(n: i32, k: usize) -> i32 {
 }
 
 /**
- * 题目描述：https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/description/
- * 给你一个整数数组 nums ，你需要找出一个 连续子数组 ，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
- * 请你找出符合题意的 最短 子数组，并输出它的长度。
+ * 581. 最短无序连续子数组
+ * https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/description/
  */
 pub fn find_unsorted_subarray(nums: Vec<i32>) -> i32 {
     let len = nums.len();
@@ -118,5 +117,17 @@ pub fn find_unsorted_subarray(nums: Vec<i32>) -> i32 {
         0
     } else {
         end - begin + 1
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_largest_number() {
+        assert_eq!(largest_number(vec![10, 2]), "210");
+        assert_eq!(largest_number(vec![3, 30, 34, 5, 9]), "9534330");
+        assert_eq!(largest_number(vec![1]), "1");
     }
 }
