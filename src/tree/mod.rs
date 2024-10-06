@@ -121,26 +121,44 @@ pub fn lowest_common_ancestor(
     p: Option<Rc<RefCell<TreeNode>>>,
     q: Option<Rc<RefCell<TreeNode>>>,
 ) -> Option<Rc<RefCell<TreeNode>>> {
-    if let Some(x) = root.as_ref() {
-        if x.borrow().val == p.as_ref().unwrap().borrow().val
-            || x.borrow().val == q.as_ref().unwrap().borrow().val
-        {
-            return Some(Rc::clone(x));
-        }
-        let p_cloned = Some(p.as_ref().unwrap().clone());
-        let q_cloned = Some(q.as_ref().unwrap().clone());
+    // if let Some(x) = root.as_ref() {
+    //     if x.borrow().val == p.as_ref().unwrap().borrow().val
+    //         || x.borrow().val == q.as_ref().unwrap().borrow().val
+    //     {
+    //         return Some(Rc::clone(x));
+    //     }
+    //     let p_cloned = Some(p.as_ref().unwrap().clone());
+    //     let q_cloned = Some(q.as_ref().unwrap().clone());
 
-        let left = Self::lowest_common_ancestor(x.borrow_mut().left.take(), p_cloned, q_cloned);
-        let right = Self::lowest_common_ancestor(x.borrow_mut().right.take(), p, q);
-        if left.is_none() {
-            right
-        } else if right.is_none() {
-            left
-        } else {
-            Some(Rc::clone(x))
-        }
+    //     let left = Self::lowest_common_ancestor(x.borrow_mut().left.take(), p_cloned, q_cloned);
+    //     let right = Self::lowest_common_ancestor(x.borrow_mut().right.take(), p, q);
+    //     if left.is_none() {
+    //         right
+    //     } else if right.is_none() {
+    //         left
+    //     } else {
+    //         Some(Rc::clone(x))
+    //     }
+    // } else {
+    //     None
+    // }
+
+    if root.is_none() || p == root || q == root {
+        return root;
+    }
+    let x = root.as_ref().unwrap();
+
+    let l = Self::lowest_common_ancestor(x.borrow_mut().left.take(), p.clone(), q.clone());
+    let r = Self::lowest_common_ancestor(x.borrow_mut().right.take(), p, q);
+
+    if l.is_some() && r.is_some() {
+        return root;
+    }
+
+    if l.is_some() {
+        l
     } else {
-        None
+        r
     }
 }
 

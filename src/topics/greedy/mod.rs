@@ -23,20 +23,19 @@ pub fn largest_number(mut nums: Vec<i32>) -> String {
  */
 pub fn two_city_sched_cost(costs: Vec<Vec<i32>>) -> i32 {
     let n = costs.len();
-    let m = n / 2;
+    let m = n >> 1;
 
     let mut diff = costs
         .iter()
-        .map(|prices| prices[1] - prices[0])
+        .map(|cost| cost[1] - cost[0])
         .collect::<Vec<i32>>();
-    diff.sort_unstable_by(|a, b| a.cmp(b));
+    diff.sort();
 
-    let sorted_diff = &diff[..m].iter().sum::<i32>();
-
-    costs.iter().map(|prices| prices[0]).sum::<i32>() + sorted_diff
+    costs.iter().map(|cost| cost[0]).sum::<i32>() + diff.iter().take(m).sum::<i32>()
 }
 
 /**
+ * 1553. 吃掉 N 个橘子的最少天数
  * https://leetcode.cn/problems/minimum-number-of-days-to-eat-n-oranges/description/
 */
 pub fn min_days(n: i32) -> i32 {
@@ -148,5 +147,24 @@ mod tests {
         assert_eq!(largest_number(vec![10, 2]), "210");
         assert_eq!(largest_number(vec![3, 30, 34, 5, 9]), "9534330");
         assert_eq!(largest_number(vec![1]), "1");
+    }
+
+    #[test]
+    fn test_two_city_sched_cost() {
+        assert_eq!(
+            two_city_sched_cost(vec![
+                vec![10, 20],
+                vec![30, 200],
+                vec![400, 50],
+                vec![30, 20]
+            ]),
+            410
+        );
+    }
+
+    #[test]
+    fn test_min_days() {
+        assert_eq!(min_days(10), 4);
+        assert_eq!(min_days(6), 3);
     }
 }
