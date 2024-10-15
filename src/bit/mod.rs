@@ -169,3 +169,39 @@ pub fn binary_div(a: i32, b: i32) -> i32 {
     let ans = if (a < 0) ^ (b < 0) { neg(ans) } else { ans };
     ans
 }
+
+/**
+ * 非位运算版本
+ * https://leetcode.cn/problems/n-queens-ii/
+*/
+pub fn total_n_queens(n: i32) -> i32 {
+    if n < 1 {
+        return 0;
+    };
+
+    let n = n as usize;
+    fn can_place(path: &mut Vec<i32>, i: usize, j: usize) -> bool {
+        for k in 0..i {
+            if j == path[k] as usize || (i as i32 - k as i32).abs() == (j as i32 - path[k]).abs() {
+                return false;
+            }
+        }
+        true
+    }
+
+    fn f(i: usize, path: &mut Vec<i32>, n: usize) -> i32 {
+        if i == n {
+            return 1;
+        };
+        let mut ans: i32 = 0;
+        for j in 0..n {
+            if can_place(path, i, j) {
+                path[i] = j as i32;
+                ans += f(i + 1, path, n);
+            }
+        }
+        ans
+    }
+    let mut path = vec![0; n];
+    f(0, &mut path, n)
+}
