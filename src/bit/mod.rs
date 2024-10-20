@@ -174,34 +174,66 @@ pub fn binary_div(a: i32, b: i32) -> i32 {
  * 非位运算版本
  * https://leetcode.cn/problems/n-queens-ii/
 */
+// pub fn total_n_queens(n: i32) -> i32 {
+//     if n < 1 {
+//         return 0;
+//     };
+
+//     let n = n as usize;
+//     fn can_place(path: &mut Vec<i32>, i: usize, j: usize) -> bool {
+//         for k in 0..i {
+//             if j == path[k] as usize || (i as i32 - k as i32).abs() == (j as i32 - path[k]).abs() {
+//                 return false;
+//             }
+//         }
+//         true
+//     }
+
+//     fn f(i: usize, path: &mut Vec<i32>, n: usize) -> i32 {
+//         if i == n {
+//             return 1;
+//         };
+//         let mut ans: i32 = 0;
+//         for j in 0..n {
+//             if can_place(path, i, j) {
+//                 path[i] = j as i32;
+//                 ans += f(i + 1, path, n);
+//             }
+//         }
+//         ans
+//     }
+//     let mut path = vec![0; n];
+//     f(0, &mut path, n)
+// }
+
+/**
+ * 位运算版本
+ * https://leetcode.cn/problems/n-queens-ii/
+*/
 pub fn total_n_queens(n: i32) -> i32 {
     if n < 1 {
         return 0;
     };
-
-    let n = n as usize;
-    fn can_place(path: &mut Vec<i32>, i: usize, j: usize) -> bool {
-        for k in 0..i {
-            if j == path[k] as usize || (i as i32 - k as i32).abs() == (j as i32 - path[k]).abs() {
-                return false;
-            }
-        }
-        true
-    }
-
-    fn f(i: usize, path: &mut Vec<i32>, n: usize) -> i32 {
-        if i == n {
+    let limit = (1 << n) - 1;
+    fn f(limit: i32, col: i32, left_bottom: i32, right_bottom: i32) -> i32 {
+        if col == limit {
             return 1;
         };
-        let mut ans: i32 = 0;
-        for j in 0..n {
-            if can_place(path, i, j) {
-                path[i] = j as i32;
-                ans += f(i + 1, path, n);
-            }
+        let mut ans = 0;
+
+        let ban = col | left_bottom | right_bottom;
+        let mut candidate = limit & !ban;
+        while candidate != 0 {
+            let place = candidate & (!candidate + 1);
+            candidate ^= place;
+            ans += f(
+                limit,
+                col | place,
+                (left_bottom | place) << 1,
+                (right_bottom | place) >> 1,
+            );
         }
         ans
     }
-    let mut path = vec![0; n];
-    f(0, &mut path, n)
+    f(limit, 0, 0, 0)
 }
