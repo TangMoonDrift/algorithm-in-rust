@@ -229,8 +229,8 @@ pub fn total_n_queens(n: i32) -> i32 {
             ans += f(
                 limit,
                 col | place,
-                (left_bottom | place) << 1,
-                (right_bottom | place) >> 1,
+                (left_bottom | place) >> 1,
+                (right_bottom | place) << 1,
             );
         }
         ans
