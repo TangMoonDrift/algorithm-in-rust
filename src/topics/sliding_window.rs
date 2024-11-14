@@ -114,6 +114,51 @@ pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
 
     nums_of_most_kinds(&nums, k) - nums_of_most_kinds(&nums, k - 1)
 }
+
+/**
+ * https://leetcode.cn/problems/longest-substring-with-at-least-k-repeating-characters/description/
+ */
+pub fn longest_substring(s: String, k: i32) -> i32 {
+    let nums: Vec<u8> = s.into_bytes();
+    let n = nums.len();
+    let mut cnts = vec![0; 256];
+    let mut ans = 0;
+
+    for required in 1..=26 {
+        cnts.fill(0);
+        let (mut l, mut r, mut collect, mut satisfy): (usize, usize, usize, usize) = (0, 0, 0, 0);
+        while r < n {
+            cnts[nums[r] as usize] += 1;
+            if cnts[nums[r] as usize] == 1 {
+                collect += 1;
+            }
+
+            if cnts[nums[r] as usize] == k {
+                satisfy += 1;
+            }
+
+            while collect > required {
+                if cnts[nums[l] as usize] == 1 {
+                    collect -= 1;
+                }
+
+                if cnts[nums[l] as usize] == k {
+                    satisfy -= 1;
+                }
+
+                cnts[nums[l] as usize] -= 1;
+                l += 1;
+            }
+
+            if satisfy == required {
+                ans = ans.max(r - l + 1);
+            }
+            r += 1;
+        }
+    }
+
+    ans as i32
+}
 #[cfg(test)]
 mod tests {
     use super::*;
