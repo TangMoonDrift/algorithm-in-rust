@@ -58,11 +58,6 @@ pub fn length_of_longest_substring(s: String) -> i32 {
 }
 
 /**
- * https://leetcode.cn/problems/minimum-window-substring/
-*/
-// pub fn min_window(s: String, t: String) -> String {}
-
-/**
  * https://leetcode.cn/problems/gas-station/
  */
 pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
@@ -86,6 +81,39 @@ pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
     -1
 }
 
+/**
+ * https://leetcode.cn/problems/subarrays-with-k-different-integers/description/
+ */
+pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
+    fn nums_of_most_kinds(nums: &Vec<i32>, k: i32) -> i32 {
+        let mut cnts = vec![0; 20001];
+        let mut ans = 0;
+        let mut collect = 0;
+        let (mut l, mut r): (usize, usize) = (0, 0);
+
+        while r < nums.len() {
+            cnts[nums[r] as usize] += 1;
+            if cnts[nums[r] as usize] == 1 {
+                collect += 1;
+            }
+
+            while collect > k {
+                cnts[nums[l] as usize] -= 1;
+                if cnts[nums[l] as usize] == 0 {
+                    collect -= 1;
+                }
+                l += 1;
+            }
+
+            ans += r - l + 1;
+            r += 1;
+        }
+
+        ans as i32
+    }
+
+    nums_of_most_kinds(&nums, k) - nums_of_most_kinds(&nums, k - 1)
+}
 #[cfg(test)]
 mod tests {
     use super::*;
