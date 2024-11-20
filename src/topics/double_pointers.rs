@@ -1,6 +1,27 @@
 //! 双指针专题
 
 /**
+ * https://leetcode.cn/problems/sort-array-by-parity-ii/description/
+ */
+pub fn sort_array_by_parity_ii(mut nums: Vec<i32>) -> Vec<i32> {
+    let mut even = 0;
+    let mut odd = 1;
+    let n = nums.len();
+
+    while odd < n && even < n {
+        if nums[n - 1] & 1 != 0 {
+            nums.swap(odd, n - 1);
+            odd += 2;
+        } else {
+            nums.swap(even, n - 1);
+            even += 2;
+        }
+    }
+
+    nums
+}
+
+/**
  * 475. 供暖器
  * https://leetcode.cn/problems/heaters/
  */
