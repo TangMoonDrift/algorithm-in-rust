@@ -1,6 +1,7 @@
 //! 双指针专题
 
 /**
+ * 922. 按奇偶排序数组 II
  * https://leetcode.cn/problems/sort-array-by-parity-ii/description/
  */
 pub fn sort_array_by_parity_ii(mut nums: Vec<i32>) -> Vec<i32> {
@@ -22,6 +23,7 @@ pub fn sort_array_by_parity_ii(mut nums: Vec<i32>) -> Vec<i32> {
 }
 
 /**
+ * 287. 寻找重复数
  * https://leetcode.cn/problems/find-the-duplicate-number/description/
  */
 pub fn find_duplicate(nums: Vec<i32>) -> i32 {
