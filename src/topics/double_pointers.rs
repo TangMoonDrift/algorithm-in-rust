@@ -22,6 +22,31 @@ pub fn sort_array_by_parity_ii(mut nums: Vec<i32>) -> Vec<i32> {
 }
 
 /**
+ * https://leetcode.cn/problems/find-the-duplicate-number/description/
+ */
+pub fn find_duplicate(nums: Vec<i32>) -> i32 {
+    if nums.len() == 1 {
+        return -1;
+    }
+
+    let mut slow = nums[0];
+    let mut fast = nums[nums[0] as usize];
+
+    while slow != fast {
+        slow = nums[slow as usize];
+        fast = nums[nums[fast as usize] as usize];
+    }
+
+    fast = 0;
+    while slow != fast {
+        slow = nums[slow as usize];
+        fast = nums[fast as usize];
+    }
+
+    fast
+}
+
+/**
  * 475. 供暖器
  * https://leetcode.cn/problems/heaters/
  */
@@ -88,6 +113,18 @@ pub fn first_missing_positive(nums: Vec<i32>) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn test_sort_array_by_parity_ii() {
+        assert_eq!(sort_array_by_parity_ii(vec![4, 2, 5, 7]), vec![4, 5, 2, 7]);
+        assert_eq!(sort_array_by_parity_ii(vec![2, 3]), vec![2, 3]);
+    }
+
+    #[test]
+    fn test_find_duplicate() {
+        assert_eq!(find_duplicate(vec![1, 3, 4, 2, 2]), 2);
+        assert_eq!(find_duplicate(vec![3, 1, 3, 4, 2]), 3);
+    }
+
     #[test]
     fn test_find_radius() {
         assert_eq!(find_radius(vec![1, 2, 3], vec![2]), 1);
