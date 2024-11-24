@@ -49,6 +49,27 @@ pub fn find_duplicate(nums: Vec<i32>) -> i32 {
 }
 
 /**
+ * 11. 盛最多水的容器
+ * https://leetcode.cn/problems/container-with-most-water/description/
+ */
+pub fn max_area(height: Vec<i32>) -> i32 {
+    let mut l = 0;
+    let mut r = height.len() - 1;
+    let mut ans = 0;
+
+    while l < r {
+        ans = ans.max(height[l].min(height[r]) * (r - l) as i32);
+        if height[l] < height[r] {
+            l += 1;
+        } else {
+            r -= 1;
+        }
+    }
+
+    ans
+}
+
+/**
  * 475. 供暖器
  * https://leetcode.cn/problems/heaters/
  */
@@ -132,6 +153,12 @@ mod tests {
         assert_eq!(find_radius(vec![1, 2, 3], vec![2]), 1);
         assert_eq!(find_radius(vec![1, 2, 3, 4], vec![1, 4]), 1);
         assert_eq!(find_radius(vec![1, 5], vec![2]), 3);
+    }
+
+    #[test]
+    fn test_max_area() {
+        assert_eq!(max_area(vec![1, 8, 6, 2, 5, 4, 8, 3, 7]), 49);
+        assert_eq!(max_area(vec![1, 1]), 1);
     }
 
     #[test]
