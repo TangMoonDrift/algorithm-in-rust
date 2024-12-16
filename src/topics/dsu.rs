@@ -2,14 +2,14 @@
 
 pub struct UnionFind {
     father: Vec<usize>,
-    size: Vec<usize>,
+    rank: Vec<usize>,
 }
 
 impl UnionFind {
     pub fn new(n: usize) -> Self {
         Self {
             father: (0..n).collect(),
-            size: vec![1; n],
+            rank: vec![1; n],
         }
     }
 
@@ -24,14 +24,18 @@ impl UnionFind {
         let fx = self.find(x);
         let fy = self.find(y);
         if fx != fy {
-            if self.size[fx] < self.size[fy] {
+            if self.rank[fx] < self.rank[fy] {
                 self.father[fx] = fy;
-                self.size[fy] += self.size[fx];
+                self.rank[fy] += self.rank[fx];
             } else {
                 self.father[fy] = fx;
-                self.size[fx] += self.size[fy];
+                self.rank[fx] += self.rank[fy];
             }
         }
+    }
+
+    pub fn is_connected(&mut self, x: usize, y: usize) -> bool {
+        self.find(x) == self.find(y)
     }
 }
 
@@ -62,31 +66,9 @@ pub fn min_swaps_couples(row: Vec<i32>) -> i32 {
  */
 pub fn num_similar_groups(strs: Vec<String>) -> i32 {
     let n = strs.len();
-    let m = strs[0].len();
     let mut sets = n;
-    let mut father = vec![0; sets];
-    build(&mut father, n);
-
-    fn build(father: &mut Vec<usize>, sets: usize) {
-        for i in 0..sets {
-            father[i] = i;
-        }
-    }
-
-    fn find(father: &mut Vec<usize>, i: usize) -> usize {
-        if father[i] != i {
-            father[i] = find(father, father[i]);
-        }
-        father[i]
-    }
-
-    fn union(father: &mut Vec<usize>, x: usize, y: usize) {
-        let fx = find(father, x);
-        let fy = find(father, y);
-        father[fx] = fy;
-    }
-
-    fn ok(a: &str, b: &str, k: usize) -> bool {
+    let mut union_find = UnionFind::new(n);
+    fn ok(a: &str, b: &str) -> bool {
         let mut diff = 0;
         for (char_in_a, char_in_b) in a.bytes().zip(b.bytes()) {
             if char_in_a != char_in_b {
@@ -101,9 +83,9 @@ pub fn num_similar_groups(strs: Vec<String>) -> i32 {
 
     for i in 0..n {
         for j in (i + 1)..n {
-            if find(&mut father, i) != find(&mut father, j) {
-                if ok(&strs[i], &strs[j], m) {
-                    union(&mut father, i, j);
+            if union_find.find(i) != union_find.find(j) {
+                if ok(&strs[i], &strs[j]) {
+                    union_find.union(i, j);
                     sets -= 1;
                 }
             }
@@ -187,5 +169,21 @@ mod tests {
     fn test_min_swaps_couples() {
         assert_eq!(min_swaps_couples(vec![0, 2, 1, 3]), 1);
         assert_eq!(min_swaps_couples(vec![3, 2, 0, 1]), 0);
+    }
+
+    fn test_num_similar_groups() {
+        assert_eq!(
+            num_similar_groups(vec![
+                "tars".to_owned(),
+                "rats".to_owned(),
+                "arts".to_owned(),
+                "star".to_owned()
+            ]),
+            2
+        );
+        assert_eq!(
+            num_similar_groups(vec!["omv".to_owned(), "ovm".to_owned()]),
+            1
+        );
     }
 }
