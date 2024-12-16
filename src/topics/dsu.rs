@@ -112,16 +112,7 @@ pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
 
     let n = grid.len();
     let m = grid[0].len();
-
     let mut sets = 0;
-    for i in 0..n {
-        for j in 0..m {
-            if grid[i][j] == '1' {
-                sets += 1;
-            }
-        }
-    }
-
     let mut union_find = UnionFind::new(100_001);
 
     fn serialize(cols: usize, i: usize, j: usize) -> usize {
@@ -131,20 +122,21 @@ pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
     for i in 0..n {
         for j in 0..m {
             if grid[i][j] == '1' {
-                let index_1 = serialize(m, i, j);
-                union_find.set_father_index(index_1);
-                let index_2 = serialize(m, i - 1, j);
-                let index_3 = serialize(m, i, j - 1);
+                sets += 1;
+                let curr = serialize(m, i, j);
+                union_find.set_father_index(curr);
+                let top = serialize(m, i - 1, j);
+                let left = serialize(m, i, j - 1);
                 if i > 0 && grid[i - 1][j] == '1' {
-                    if union_find.find(index_1) != union_find.find(index_2) {
-                        union_find.union(index_1, index_2);
+                    if union_find.find(curr) != union_find.find(top) {
+                        union_find.union(curr, top);
                         sets -= 1;
                     }
                 }
 
                 if j > 0 && grid[i][j - 1] == '1' {
-                    if union_find.find(index_1) != union_find.find(index_3) {
-                        union_find.union(index_1, index_3);
+                    if union_find.find(curr) != union_find.find(left) {
+                        union_find.union(curr, left);
                         sets -= 1;
                     }
                 }
@@ -163,6 +155,7 @@ mod tests {
         assert_eq!(min_swaps_couples(vec![3, 2, 0, 1]), 0);
     }
 
+    #[test]
     fn test_num_similar_groups() {
         assert_eq!(
             num_similar_groups(vec![
@@ -175,6 +168,19 @@ mod tests {
         );
         assert_eq!(
             num_similar_groups(vec!["omv".to_owned(), "ovm".to_owned()]),
+            1
+        );
+    }
+
+    #[test]
+    fn test_num_islands() {
+        assert_eq!(
+            num_islands(vec![
+                vec!['1', '1', '1', '1', '0'],
+                vec!['1', '1', '0', '1', '0'],
+                vec!['1', '1', '0', '0', '0'],
+                vec!['0', '0', '0', '0', '0']
+            ]),
             1
         );
     }
