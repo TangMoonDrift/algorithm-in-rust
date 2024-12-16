@@ -42,36 +42,11 @@ impl UnionFind {
 pub fn min_swaps_couples(row: Vec<i32>) -> i32 {
     let n = row.len();
     let mut sets = n / 2;
-    let mut father = vec![0; sets];
-    build(&mut father, sets);
-
-    fn build(father: &mut Vec<usize>, sets: usize) {
-        for i in 0..sets {
-            father[i] = i;
-        }
-    }
-
-    fn union(father: &mut Vec<usize>, x: usize, y: usize) {
-        let fx = find(father, x);
-        let fy = find(father, y);
-        father[fx] = fy;
-    }
-
-    fn find(father: &mut Vec<usize>, i: usize) -> usize {
-        if father[i] != i {
-            father[i] = find(father, father[i]);
-        }
-        father[i]
-    }
+    let mut union_find = UnionFind::new(sets);
 
     for i in (0..n).step_by(2) {
-        if find(&mut father, (row[i] / 2) as usize) != find(&mut father, (row[i + 1] / 2) as usize)
-        {
-            union(
-                &mut father,
-                (row[i] / 2) as usize,
-                (row[i + 1] / 2) as usize,
-            );
+        if union_find.find((row[i] / 2) as usize) != union_find.find((row[i + 1] / 2) as usize) {
+            union_find.union((row[i] / 2) as usize, (row[i + 1] / 2) as usize);
             sets -= 1;
         }
     }
@@ -202,4 +177,13 @@ pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
     }
 
     sets as i32
+}
+
+mod tests {
+    use super::*;
+    #[test]
+    fn test_min_swaps_couples() {
+        assert_eq!(min_swaps_couples(vec![0, 2, 1, 3]), 1);
+        assert_eq!(min_swaps_couples(vec![3, 2, 0, 1]), 0);
+    }
 }
