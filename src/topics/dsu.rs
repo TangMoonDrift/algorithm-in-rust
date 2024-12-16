@@ -1,8 +1,8 @@
 //! 并查集专题
 
 pub struct UnionFind {
-    pub father: Vec<usize>,
-    pub size: Vec<usize>,
+    father: Vec<usize>,
+    size: Vec<usize>,
 }
 
 impl UnionFind {
@@ -45,8 +45,10 @@ pub fn min_swaps_couples(row: Vec<i32>) -> i32 {
     let mut union_find = UnionFind::new(sets);
 
     for i in (0..n).step_by(2) {
-        if union_find.find((row[i] / 2) as usize) != union_find.find((row[i + 1] / 2) as usize) {
-            union_find.union((row[i] / 2) as usize, (row[i + 1] / 2) as usize);
+        let x = row[i] as usize / 2;
+        let y = row[i + 1] as usize / 2;
+        if union_find.find(x) != union_find.find(y) {
+            union_find.union(x, y);
             sets -= 1;
         }
     }
