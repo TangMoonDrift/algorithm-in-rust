@@ -100,59 +100,51 @@ pub fn num_similar_groups(strs: Vec<String>) -> i32 {
  * https://leetcode.cn/problems/number-of-islands/
  */
 pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
+    trait Extra {
+        fn set_father_index(&mut self, index: usize);
+    }
+
+    impl Extra for UnionFind {
+        fn set_father_index(&mut self, index: usize) {
+            self.father[index] = index;
+        }
+    }
+
     let n = grid.len();
     let m = grid[0].len();
-    let mut father = vec![0; 100001];
-    let mut sets = build(&grid, &mut father, n, m);
 
-    fn build(grid: &Vec<Vec<char>>, father: &mut Vec<usize>, n: usize, m: usize) -> usize {
-        let mut sets = 0;
-        for i in 0..n {
-            for j in 0..m {
-                if grid[i][j] == '1' {
-                    let index = serialize(m, i, j);
-                    father[index] = index;
-                    sets += 1;
-                }
+    let mut sets = 0;
+    for i in 0..n {
+        for j in 0..m {
+            if grid[i][j] == '1' {
+                sets += 1;
             }
         }
-
-        sets
     }
+
+    let mut union_find = UnionFind::new(100_001);
 
     fn serialize(cols: usize, i: usize, j: usize) -> usize {
         i * cols + j
-    }
-
-    fn find(father: &mut Vec<usize>, i: usize) -> usize {
-        if father[i] != i {
-            father[i] = find(father, father[i]);
-        }
-        father[i]
-    }
-
-    fn union(father: &mut Vec<usize>, x: usize, y: usize) {
-        let fx = find(father, x);
-        let fy = find(father, y);
-        father[fx] = fy;
     }
 
     for i in 0..n {
         for j in 0..m {
             if grid[i][j] == '1' {
                 let index_1 = serialize(m, i, j);
+                union_find.set_father_index(index_1);
                 let index_2 = serialize(m, i - 1, j);
                 let index_3 = serialize(m, i, j - 1);
                 if i > 0 && grid[i - 1][j] == '1' {
-                    if find(&mut father, index_1) != find(&mut father, index_2) {
-                        union(&mut father, index_1, index_2);
+                    if union_find.find(index_1) != union_find.find(index_2) {
+                        union_find.union(index_1, index_2);
                         sets -= 1;
                     }
                 }
 
                 if j > 0 && grid[i][j - 1] == '1' {
-                    if find(&mut father, index_1) != find(&mut father, index_3) {
-                        union(&mut father, index_1, index_3);
+                    if union_find.find(index_1) != union_find.find(index_3) {
+                        union_find.union(index_1, index_3);
                         sets -= 1;
                     }
                 }
