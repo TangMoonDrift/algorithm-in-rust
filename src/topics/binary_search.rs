@@ -15,8 +15,8 @@ pub fn min_eating_speed(piles: Vec<i32>, h: i32) -> i32 {
     // 更具描述性的函数名
     let is_feasible = |speed: i32| -> bool {
         let mut hours_needed = 0;
-        for pile in &piles {
-            hours_needed += ((*pile + speed - 1) / speed);
+        for &pile in &piles {
+            hours_needed += (pile + speed - 1) / speed;
             if hours_needed > h {
                 return false;
             }

@@ -75,13 +75,11 @@ pub fn largest_rectangle_area(heights: Vec<i32>) -> i32 {
     let n = heights.len();
     let mut stack: Vec<usize> = Vec::new();
     let mut ans: isize = 0;
-    let mut prev = 0;
-    let mut cur_index = 0;
 
     for i in 0..n {
         while !stack.is_empty() && heights[*stack.last().unwrap()] >= heights[i] {
-            cur_index = stack.pop().unwrap();
-            prev = if stack.is_empty() {
+            let cur_index = stack.pop().unwrap();
+            let prev = if stack.is_empty() {
                 i
             } else {
                 i - stack.last().unwrap() - 1
@@ -92,8 +90,8 @@ pub fn largest_rectangle_area(heights: Vec<i32>) -> i32 {
     }
 
     while !stack.is_empty() {
-        cur_index = stack.pop().unwrap();
-        prev = if stack.is_empty() {
+        let cur_index = stack.pop().unwrap();
+        let prev = if stack.is_empty() {
             n
         } else {
             n - stack.last().unwrap() - 1
