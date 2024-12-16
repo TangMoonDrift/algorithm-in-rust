@@ -29,6 +29,7 @@ impl UnionFind {
                 self.size[fy] += self.size[fx];
             } else {
                 self.father[fy] = fx;
+                self.size[fx] += self.size[fy];
             }
         }
     }
