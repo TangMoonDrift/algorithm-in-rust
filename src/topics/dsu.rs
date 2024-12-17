@@ -301,6 +301,73 @@ pub fn find_all_people(n: i32, meetings: Vec<Vec<i32>>, first_person: i32) -> Ve
     ans
 }
 
+/**
+ * 2421. 好路径的数目
+ * https://leetcode.cn/problems/number-of-good-paths/description/
+ */
+pub fn number_of_good_paths(vals: Vec<i32>, edges: Vec<Vec<i32>>) -> i32 {
+    struct EnhancedUnionFind {
+        father: Vec<usize>,
+        max_counts: Vec<usize>,
+    }
+
+    impl EnhancedUnionFind {
+        pub fn new(size: usize) -> Self {
+            Self {
+                father: (0..size).collect(),
+                max_counts: vec![1; size],
+            }
+        }
+
+        pub fn find(&mut self, x: usize) -> usize {
+            if self.father[x] != x {
+                self.father[x] = self.find(self.father[x]);
+            }
+            self.father[x]
+        }
+
+        pub fn union(&mut self, x: usize, y: usize, vals: &Vec<i32>) -> usize {
+            let fx = self.find(x);
+            let fy = self.find(y);
+            let mut path = 0;
+            if vals[fx] > vals[fy] {
+                self.father[fy] = fx;
+            } else if vals[fx] < vals[fy] {
+                self.father[fx] = fy;
+            } else {
+                self.father[fx] = fy;
+                path = self.max_counts[fx] * self.max_counts[fy];
+                self.max_counts[fy] += self.max_counts[fx];
+            }
+            path
+        }
+    }
+    let n = vals.len();
+    let mut edges = edges.clone();
+    let mut union_find = EnhancedUnionFind::new(n);
+    let mut ans = n;
+
+    edges.sort_unstable_by(|a, b| {
+        let pos_a_start = a[0] as usize;
+        let pos_a_end = a[1] as usize;
+        let pos_b_start = b[0] as usize;
+        let pos_b_end = b[1] as usize;
+
+        let max_a = vals[pos_a_start].max(vals[pos_a_end]);
+        let max_b = vals[pos_b_start].max(vals[pos_b_end]);
+
+        max_a.cmp(&max_b)
+    });
+
+    for edge in edges.iter() {
+        let pos_start = edge[0] as usize;
+        let pos_end = edge[1] as usize;
+        ans += union_find.union(pos_start, pos_end, &vals);
+    }
+
+    ans as i32
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
