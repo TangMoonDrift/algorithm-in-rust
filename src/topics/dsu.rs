@@ -147,6 +147,7 @@ pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
     sets as i32
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
     #[test]
