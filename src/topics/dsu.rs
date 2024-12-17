@@ -1,4 +1,5 @@
 //! 并查集专题
+use std::collections::HashMap;
 
 pub struct UnionFind {
     father: Vec<usize>,
@@ -147,6 +148,69 @@ pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
     sets as i32
 }
 
+/**
+ * 947. 移除最多的同行或同列石头
+ * https://leetcode.cn/problems/most-stones-removed-with-same-row-or-column/description/
+ */
+pub fn remove_stones(stones: Vec<Vec<i32>>) -> i32 {
+    struct EnhancedUnionFind {
+        father: Vec<usize>,
+        sets: usize,
+    }
+
+    impl EnhancedUnionFind {
+        pub fn new(size: usize) -> Self {
+            Self {
+                father: (0..size).collect(),
+                sets: size,
+            }
+        }
+
+        pub fn find(&mut self, x: usize) -> usize {
+            if self.father[x] != x {
+                self.father[x] = self.find(self.father[x]);
+            }
+            self.father[x]
+        }
+
+        pub fn union(&mut self, x: usize, y: usize) {
+            let fx = self.find(x);
+            let fy = self.find(y);
+            if fx != fy {
+                self.father[fx] = fy;
+                self.sets -= 1;
+            }
+        }
+
+        pub fn sets(&self) -> usize {
+            self.sets
+        }
+    }
+
+    let n = stones.len();
+    let mut union_find = EnhancedUnionFind::new(n);
+    let mut row_first: HashMap<usize, usize> = HashMap::new();
+    let mut col_first: HashMap<usize, usize> = HashMap::new();
+
+    for (i, stone) in stones.into_iter().enumerate() {
+        let row = stone[0] as usize;
+        let col = stone[1] as usize;
+
+        if let Some(&r) = row_first.get(&row) {
+            union_find.union(i, r);
+        } else {
+            row_first.insert(row, i);
+        }
+
+        if let Some(&c) = col_first.get(&col) {
+            union_find.union(i, c);
+        } else {
+            col_first.insert(col, i);
+        }
+    }
+
+    (n - union_find.sets()) as i32
+}
 #[cfg(test)]
 mod tests {
     use super::*;
