@@ -211,6 +211,96 @@ pub fn remove_stones(stones: Vec<Vec<i32>>) -> i32 {
 
     (n - union_find.sets()) as i32
 }
+
+/**
+ * 2092. 找出知晓秘密的所有专家
+ * https://leetcode.cn/problems/find-all-people-with-secret/description/
+ */
+pub fn find_all_people(n: i32, meetings: Vec<Vec<i32>>, first_person: i32) -> Vec<i32> {
+    struct EnhancedUnionFind {
+        father: Vec<usize>,
+        know: Vec<bool>,
+    }
+
+    impl EnhancedUnionFind {
+        pub fn new(size: usize, first: usize) -> Self {
+            let mut instance = Self {
+                father: (0..size).collect(),
+                know: vec![false; size],
+            };
+            instance.father[first] = 0;
+            instance.know[0] = true;
+            instance
+        }
+
+        pub fn find(&mut self, x: usize) -> usize {
+            if self.father[x] != x {
+                self.father[x] = self.find(self.father[x]);
+            }
+            self.father[x]
+        }
+
+        pub fn union(&mut self, x: usize, y: usize) {
+            let fx = self.find(x);
+            let fy = self.find(y);
+            if fx != fy {
+                self.father[fx] = fy;
+                self.know[fy] |= self.know[fx];
+            }
+        }
+
+        pub fn is_known(&mut self, x: usize) -> bool {
+            self.know[x]
+        }
+
+        pub fn reset_father(&mut self, x: usize) {
+            self.father[x] = x;
+        }
+    }
+
+    let m = meetings.len();
+    let mut meetings = meetings.clone();
+    meetings.sort_unstable_by(|a, b| a[2].cmp(&b[2]));
+    let mut union_find = EnhancedUnionFind::new(n as usize, first_person as usize);
+    let mut ans = vec![];
+
+    let mut l = 0;
+    while l < m {
+        let mut r = l;
+        while r + 1 < m && meetings[l][2] == meetings[r + 1][2] {
+            r += 1;
+        }
+
+        for i in l..=r {
+            union_find.union(meetings[i][0] as usize, meetings[i][1] as usize);
+        }
+
+        for i in l..=r {
+            let x = meetings[i][0] as usize;
+            let y = meetings[i][1] as usize;
+            let fx = union_find.find(x);
+            let fy = union_find.find(y);
+            if !union_find.is_known(fx) {
+                union_find.reset_father(x);
+            }
+
+            if !union_find.is_known(fy) {
+                union_find.reset_father(y);
+            }
+        }
+        l = r + 1;
+    }
+
+    for i in 0..(n as usize) {
+        let fi = union_find.find(i);
+        if union_find.is_known(fi) {
+            ans.push(i as i32);
+        }
+    }
+
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
