@@ -15,17 +15,23 @@ impl Graph {
             head: vec![0; n + 1],
             next: vec![0; e + 1],
             to: vec![0; e + 1],
-            weight: vec![0; e * 2 + 1],
+            weight: vec![0; e + 1],
             cnt: 1,
         }
     }
 
-    pub fn build(n: usize, edges: &Vec<Vec<usize>>) -> Self {
-        let e = edges.len();
+    pub fn build(n: usize, edges: &Vec<Vec<usize>>, has_direction: bool) -> Self {
+        let e = if has_direction {
+            edges.len()
+        } else {
+            edges.len() * 2
+        };
         let mut instance = Self::new(n, e);
         for edge in edges {
             instance.add_edge(edge[0], edge[1], edge[2]);
-            instance.add_edge(edge[1], edge[0], edge[2]);
+            if !has_direction {
+                instance.add_edge(edge[1], edge[0], edge[2]);
+            }
         }
         instance
     }
@@ -37,6 +43,16 @@ impl Graph {
         self.next[index] = self.head[from];
         self.head[from] = index;
         self.cnt += 1;
+    }
+
+    pub fn collect_neighbors(&self, u: usize) -> Vec<(usize, usize)> {
+        let mut neighbors = vec![];
+        let mut index = self.head[u];
+        while index != 0 {
+            neighbors.push((self.to[index], self.weight[index]));
+            index = self.next[index];
+        }
+        neighbors
     }
 }
 
