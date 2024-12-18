@@ -1,9 +1,9 @@
 mod array;
 mod bit;
+mod graph;
 mod hash;
 mod heap;
 mod link;
-mod map;
 mod stack;
 mod topics;
 
