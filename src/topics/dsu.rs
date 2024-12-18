@@ -368,6 +368,98 @@ pub fn number_of_good_paths(vals: Vec<i32>, edges: Vec<Vec<i32>>) -> i32 {
     ans as i32
 }
 
+/**
+ * 928. 尽量减少恶意软件的传播 II
+ * https://leetcode.cn/problems/minimize-malware-spread-ii/description/
+ */
+pub fn min_malware_spread(graph: Vec<Vec<i32>>, initial: Vec<i32>) -> i32 {
+    struct EnhancedUnionFind {
+        father: Vec<usize>,
+        size: Vec<usize>,
+    }
+
+    impl EnhancedUnionFind {
+        fn new(n: usize) -> Self {
+            Self {
+                father: (0..n).collect(),
+                size: vec![1; n],
+            }
+        }
+
+        fn find(&mut self, x: usize) -> usize {
+            if self.father[x] != x {
+                self.father[x] = self.find(self.father[x]);
+            }
+            self.father[x]
+        }
+
+        fn union(&mut self, x: usize, y: usize) {
+            let fx = self.find(x);
+            let fy = self.find(y);
+            if fx != fy {
+                self.father[fx] = fy;
+                self.size[fy] += self.size[fx];
+            }
+        }
+
+        fn get_size(&self, x: usize) -> usize {
+            self.size[x]
+        }
+    }
+
+    let n = graph.len();
+    let mut virus = vec![false; n];
+    let mut infected: Vec<i32> = vec![-1; n];
+    let mut counts = vec![0; n];
+    for &i in &initial {
+        virus[i as usize] = true;
+    }
+
+    let mut union_find = EnhancedUnionFind::new(n);
+
+    for i in 0..n {
+        for j in 0..n {
+            if graph[i][j] == 1 && !virus[i] && !virus[j] {
+                union_find.union(i, j);
+            }
+        }
+    }
+
+    for &sick in &initial {
+        for neighbor in 0..n {
+            if neighbor != sick as usize && !virus[neighbor] && graph[sick as usize][neighbor] == 1
+            {
+                let father = union_find.find(neighbor);
+                if infected[father] == -1 {
+                    infected[father] = sick;
+                } else if infected[father] != -2 && infected[father] != sick {
+                    infected[father] = -2;
+                }
+            }
+        }
+    }
+
+    for i in 0..n {
+        if union_find.find(i) == i && infected[i] > 0 {
+            counts[infected[i] as usize] += union_find.get_size(i);
+        }
+    }
+
+    let mut ans = initial[0];
+    let mut max = counts[ans as usize];
+
+    for &i in initial.iter().skip(1) {
+        if max == counts[i as usize] {
+            ans = ans.min(i);
+        } else if max < counts[i as usize] {
+            ans = i;
+            max = counts[i as usize];
+        }
+    }
+
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
