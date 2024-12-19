@@ -114,21 +114,20 @@ pub fn moves_to_stamp(stamp: String, target: String) -> Vec<i32> {
 */
 pub fn loud_and_rich(richer: Vec<Vec<i32>>, quiet: Vec<i32>) -> Vec<i32> {
     let n = quiet.len();
-    let mut ans = vec![0; n];
-    let mut in_degree = vec![0; n];
-    // let mut graph = vec![vec![]; n];
-    let mut graph = HashMap::with_capacity(n);
-
-    richer.iter().for_each(|item| {
-        // graph[item[0] as usize].push(item[1]);
-        graph.entry(item[0]).or_insert(vec![]).push(item[1]);
-        in_degree[item[1] as usize] += 1;
-    });
-
+    let m = richer.len();
+    let mut ans = (0..n as i32).collect::<Vec<i32>>();
     let mut queue = vec![0; n];
     let (mut l, mut r) = (0, 0);
+    let mut in_degree = vec![0; n];
+
+    let mut graph = Graph::new(n, m);
+
+    richer.iter().for_each(|r| {
+        graph.add_edge(r[0] as usize, r[1] as usize, 0);
+        in_degree[r[1] as usize] += 1;
+    });
+
     for i in 0..n {
-        ans[i] = i as i32;
         if in_degree[i] == 0 {
             queue[r] = i;
             r += 1;
@@ -136,34 +135,19 @@ pub fn loud_and_rich(richer: Vec<Vec<i32>>, quiet: Vec<i32>) -> Vec<i32> {
     }
 
     while l < r {
-        let cur = queue[l];
+        let curr = queue[l];
         l += 1;
-
-        // let nexts = &graph[cur];
-        // nexts.iter().for_each(|next| {
-        //     let next = *next as usize;
-        //     if quiet[ans[cur] as usize] < quiet[ans[next] as usize] {
-        //         ans[next] = ans[cur];
-        //     }
-        //     in_degree[next] -= 1;
-        //     if in_degree[next] == 0 {
-        //         queue[r] = next;
-        //         r += 1;
-        //     }
-        // });
-
-        if let Some(nexts) = graph.get(&(cur as i32)) {
-            nexts.iter().for_each(|next: &i32| {
-                let next = *next as usize;
-                if quiet[ans[cur] as usize] < quiet[ans[next] as usize] {
-                    ans[next] = ans[cur];
-                }
-                in_degree[next] -= 1;
-                if in_degree[next] == 0 {
-                    queue[r] = next;
-                    r += 1;
-                }
-            });
+        let neighbors = graph.collect_neighbors(curr);
+        for neighbor in neighbors {
+            let neighbor = neighbor.0;
+            if quiet[ans[curr] as usize] < quiet[ans[neighbor] as usize] {
+                ans[neighbor] = ans[curr];
+            }
+            in_degree[neighbor] -= 1;
+            if in_degree[neighbor] == 0 {
+                queue[r] = neighbor;
+                r += 1;
+            }
         }
     }
 
