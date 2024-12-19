@@ -28,9 +28,9 @@ impl Graph {
         };
         let mut instance = Self::new(n, e);
         for edge in edges {
-            instance.add_edge(edge[0], edge[1], edge[2]);
+            instance.add_edge(edge[0], edge[1], edge.get(2).copied().unwrap_or(0));
             if !has_direction {
-                instance.add_edge(edge[1], edge[0], edge[2]);
+                instance.add_edge(edge[1], edge[0], edge.get(2).copied().unwrap_or(0));
             }
         }
         instance
