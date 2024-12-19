@@ -197,3 +197,60 @@ pub fn minimum_time(n: i32, relations: Vec<Vec<i32>>, time: Vec<i32>) -> i32 {
 
     ans
 }
+
+/**
+ * 2127. 参加会议的最多员工数
+ * https://leetcode.cn/problems/maximum-employees-to-be-invited-to-a-meeting/description/
+ */
+pub fn maximum_invitations(favorite: Vec<i32>) -> i32 {
+    let n = favorite.len();
+    let mut in_degree = vec![0; n];
+    let mut queue = vec![0; n];
+    let (mut l, mut r) = (0, 0);
+    let mut deep = vec![0; n];
+
+    for i in 0..n {
+        in_degree[favorite[i] as usize] += 1;
+    }
+    for i in 0..n {
+        if in_degree[i] == 0 {
+            queue[r] = i;
+            r += 1;
+        }
+    }
+
+    while l < r {
+        let curr = queue[l];
+        l += 1;
+        let next = favorite[curr] as usize;
+        deep[next] = deep[next].max(deep[curr] + 1);
+        in_degree[next] -= 1;
+        if in_degree[next] == 0 {
+            queue[r] = next;
+            r += 1;
+        }
+    }
+
+    let mut sum_of_small_ring = 0;
+    let mut sum_of_big_ring = 0;
+
+    for i in 0..n {
+        if in_degree[i] > 0 {
+            let mut ring_size = 1;
+            in_degree[i] = 0;
+            let mut j = favorite[i] as usize;
+            while j != i {
+                ring_size += 1;
+                in_degree[j] = 0;
+                j = favorite[j] as usize;
+            }
+            if ring_size == 2 {
+                sum_of_small_ring += 2 + deep[i] + deep[favorite[i] as usize];
+            } else {
+                sum_of_big_ring = sum_of_big_ring.max(ring_size);
+            }
+        }
+    }
+
+    sum_of_big_ring.max(sum_of_small_ring)
+}
