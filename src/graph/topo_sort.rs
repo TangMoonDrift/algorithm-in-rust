@@ -1,6 +1,5 @@
 //! 拓扑排序专题
 use crate::graph::Graph;
-use std::collections::HashMap;
 
 /**
  * 210. 课程表 II
@@ -143,6 +142,51 @@ pub fn loud_and_rich(richer: Vec<Vec<i32>>, quiet: Vec<i32>) -> Vec<i32> {
             if quiet[ans[curr] as usize] < quiet[ans[neighbor] as usize] {
                 ans[neighbor] = ans[curr];
             }
+            in_degree[neighbor] -= 1;
+            if in_degree[neighbor] == 0 {
+                queue[r] = neighbor;
+                r += 1;
+            }
+        }
+    }
+
+    ans
+}
+
+/**
+ * 2050. 并行课程 III
+ * https://leetcode.cn/problems/parallel-courses-iii/description/
+ */
+pub fn minimum_time(n: i32, relations: Vec<Vec<i32>>, time: Vec<i32>) -> i32 {
+    let n = n as usize;
+    let mut ans = 0;
+    let mut in_degree = vec![0; n + 1];
+    let mut queue = vec![0; n];
+    let (mut l, mut r) = (0, 0);
+    let mut graph = Graph::new(n, relations.len());
+    let mut costs = vec![0; n + 1];
+
+    relations.iter().for_each(|relation| {
+        graph.add_edge(relation[0] as usize, relation[1] as usize, 0);
+        in_degree[relation[1] as usize] += 1;
+    });
+
+    for i in 1..=n {
+        if in_degree[i] == 0 {
+            queue[r] = i;
+            r += 1;
+        }
+    }
+
+    while l < r {
+        let curr = queue[l];
+        l += 1;
+        let neighbors = graph.collect_neighbors(curr);
+        costs[curr] += time[curr - 1];
+        ans = ans.max(costs[curr]);
+        for neighbor in neighbors {
+            let neighbor = neighbor.0;
+            costs[neighbor] = costs[neighbor].max(costs[curr]);
             in_degree[neighbor] -= 1;
             if in_degree[neighbor] == 0 {
                 queue[r] = neighbor;
