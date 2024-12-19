@@ -45,9 +45,9 @@ impl Graph {
         self.cnt += 1;
     }
 
-    pub fn collect_neighbors(&self, u: usize) -> Vec<(usize, usize)> {
+    pub fn collect_neighbors(&self, node: usize) -> Vec<(usize, usize)> {
         let mut neighbors = vec![];
-        let mut index = self.head[u];
+        let mut index = self.head[node];
         while index != 0 {
             neighbors.push((self.to[index], self.weight[index]));
             index = self.next[index];

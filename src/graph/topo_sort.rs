@@ -48,6 +48,67 @@ pub fn find_order(num_courses: i32, prerequisites: Vec<Vec<i32>>) -> Vec<i32> {
 }
 
 /**
+ * 936. 戳印序列
+ * https://leetcode.cn/problems/stamping-the-sequence/description/
+ */
+pub fn moves_to_stamp(stamp: String, target: String) -> Vec<i32> {
+    let m = stamp.len();
+    let n = target.len();
+    let s = stamp.chars().collect::<Vec<char>>();
+    let t = target.chars().collect::<Vec<char>>();
+    let mut graph = Graph::new(1000, 1000 * m);
+    let mut in_degree = vec![m; n - m + 1];
+    let mut queue = vec![0; n - m + 1];
+    let (mut l, mut r) = (0, 0);
+
+    for i in 0..=(n - m) {
+        for j in 0..m {
+            if t[i + j] == s[j] {
+                in_degree[i] -= 1;
+                if in_degree[i] == 0 {
+                    queue[r] = i;
+                    r += 1;
+                }
+            } else {
+                graph.add_edge(i + j, i, 0);
+            }
+        }
+    }
+
+    let mut visited = vec![false; n];
+    let mut path = vec![0; n - m + 1];
+    let mut size = 0;
+    while l < r {
+        let curr = queue[l];
+        l += 1;
+        path[size] = curr as i32;
+        size += 1;
+
+        for i in 0..m {
+            if !visited[curr + i] {
+                visited[curr + i] = true;
+                let neighbors = graph.collect_neighbors(curr + i);
+                for neighbor in neighbors {
+                    let neighbor = neighbor.0;
+                    in_degree[neighbor] -= 1;
+                    if in_degree[neighbor] == 0 {
+                        queue[r] = neighbor;
+                        r += 1;
+                    }
+                }
+            }
+        }
+    }
+
+    if size != (n - m + 1) {
+        return vec![];
+    }
+
+    path.reverse();
+    path
+}
+
+/**
  * 851. 喧闹和富有
  * https://leetcode.cn/problems/loud-and-rich/
 */
