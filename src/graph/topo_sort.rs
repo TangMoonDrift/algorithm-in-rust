@@ -3,6 +3,51 @@ use crate::graph::Graph;
 use std::collections::HashMap;
 
 /**
+ * 210. 课程表 II
+ * https://leetcode.cn/problems/course-schedule-ii/description/
+ */
+pub fn find_order(num_courses: i32, prerequisites: Vec<Vec<i32>>) -> Vec<i32> {
+    let edges: Vec<Vec<usize>> = prerequisites
+        .iter()
+        .map(|edge| edge.iter().map(|&e| e as usize).rev().collect())
+        .collect();
+    let n = num_courses as usize;
+    let graph = Graph::build(n, &edges, true);
+    let mut in_degree = vec![0; n];
+    let mut queue = vec![0; n];
+    let (mut l, mut r) = (0, 0);
+
+    for edge in &edges {
+        in_degree[edge[1]] += 1;
+    }
+
+    for i in 0..n {
+        if in_degree[i] == 0 {
+            queue[r] = i as i32;
+            r += 1;
+        }
+    }
+
+    let mut cnt = 0;
+    while l < r {
+        let curr = queue[l];
+        l += 1;
+        cnt += 1;
+        let neighbors = graph.collect_neighbors(curr as usize);
+        for neighbor in &neighbors {
+            let neighbor = neighbor.0;
+            in_degree[neighbor] -= 1;
+            if in_degree[neighbor] == 0 {
+                queue[r] = neighbor as i32;
+                r += 1;
+            }
+        }
+    }
+
+    return if cnt == n { queue } else { vec![] };
+}
+
+/**
  * 851. 喧闹和富有
  * https://leetcode.cn/problems/loud-and-rich/
 */
