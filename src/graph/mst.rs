@@ -38,3 +38,31 @@ fn read_input() -> io::Result<(usize, Vec<Edge>)> {
 
     Ok((n, edges))
 }
+
+fn kruskal(mut edges: Vec<Edge>, number_of_vertices: usize) -> (i32, Vec<Edge>) {
+    fn find(parent: &mut Vec<usize>, x: usize) -> usize {
+        if parent[x] != x {
+            parent[x] = find(parent, parent[x]);
+        }
+        parent[x]
+    }
+
+    let mut parent = (0..number_of_vertices).collect::<Vec<_>>();
+    let mut total_cost = 0;
+    let mut final_edges = Vec::new();
+
+    edges.sort_unstable_by(|a, b| a.weight.cmp(&b.weight));
+
+    for edge in edges {
+        let x = find(&mut parent, edge.source);
+        let y = find(&mut parent, edge.destination);
+
+        if x != y {
+            parent[x] = y;
+            final_edges.push(edge.clone());
+            total_cost += edge.weight;
+        }
+    }
+
+    (total_cost, final_edges)
+}

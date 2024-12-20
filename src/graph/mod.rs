@@ -1,3 +1,4 @@
+pub mod mst;
 pub mod topo_sort;
 use crate::topics::dsu::UnionFind;
 
