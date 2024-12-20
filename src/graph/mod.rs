@@ -1,3 +1,4 @@
+pub mod bfs;
 pub mod mst;
 pub mod topo_sort;
 

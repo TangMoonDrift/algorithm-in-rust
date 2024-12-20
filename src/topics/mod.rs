@@ -1,4 +1,3 @@
-pub mod bfs;
 pub mod binary_search;
 pub mod diff;
 pub mod double_pointers;

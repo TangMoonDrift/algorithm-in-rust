@@ -1,8 +1,39 @@
 //! 宽度优先遍历专题
-
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::collections::VecDeque;
+
+#[derive(Eq, PartialEq, Debug)]
+pub struct Node {
+    row: usize,
+    col: usize,
+    val: i32,
+}
+
+impl Ord for Node {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.val.cmp(&other.val) {
+            Ordering::Less => Ordering::Greater,
+            Ordering::Greater => Ordering::Less,
+            Ordering::Equal => Ordering::Equal,
+        }
+    }
+}
+
+impl PartialOrd for Node {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl Into<Node> for (usize, usize, i32) {
+    fn into(self) -> Node {
+        Node {
+            row: self.0,
+            col: self.1,
+            val: self.2,
+        }
+    }
+}
 
 /**
  * 1162. 地图分析
@@ -114,38 +145,6 @@ pub fn min_cost(grid: Vec<Vec<i32>>) -> i32 {
     }
 
     -1
-}
-
-#[derive(Eq, PartialEq, Debug)]
-pub struct Node {
-    row: usize,
-    col: usize,
-    val: i32,
-}
-
-impl Ord for Node {
-    fn cmp(&self, other: &Self) -> Ordering {
-        match self.val.cmp(&other.val) {
-            Ordering::Less => Ordering::Greater,
-            Ordering::Greater => Ordering::Less,
-            Ordering::Equal => Ordering::Equal,
-        }
-    }
-}
-
-impl PartialOrd for Node {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-impl Into<Node> for (usize, usize, i32) {
-    fn into(self) -> Node {
-        Node {
-            row: self.0,
-            col: self.1,
-            val: self.2,
-        }
-    }
 }
 
 pub fn trap_rain_water(mut height_map: Vec<Vec<i32>>) -> i32 {
