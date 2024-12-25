@@ -1,7 +1,8 @@
 //! 宽度优先遍历专题
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
+use std::mem::swap;
 
 #[derive(Eq, PartialEq, Debug)]
 pub struct Node {
@@ -188,4 +189,61 @@ pub fn trap_rain_water(mut height_map: Vec<Vec<i32>>) -> i32 {
         }
     }
     sum
+}
+
+/**
+ * 127. 单词接龙
+ * https://leetcode.cn/problems/word-ladder/
+ */
+pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
+    let mut word_set = word_list.clone().into_iter().collect::<HashSet<String>>();
+    let alphabet = "abcdefghijklmnopqrstuvwxyz".chars().collect::<Vec<_>>();
+    if !word_set.contains(&end_word) {
+        return 0;
+    }
+
+    let mut small_level = HashSet::new();
+    let mut big_level = HashSet::new();
+    let mut next_level = HashSet::new();
+
+    small_level.insert(begin_word);
+    big_level.insert(end_word);
+
+    let mut level = 2;
+    while !small_level.is_empty() {
+        for word in &small_level {
+            let n = word.len();
+            for i in 0..n {
+                let old = word.chars().nth(i).unwrap_or('A');
+                for &char in &alphabet {
+                    if char != old {
+                        let mut next = word.chars().collect::<Vec<_>>();
+                        next[i] = char;
+                        let next = next.iter().collect();
+                        if big_level.contains(&next) {
+                            return level;
+                        }
+                        if word_set.contains(&next) {
+                            word_set.remove(&next);
+                            next_level.insert(next);
+                        }
+                    }
+                }
+            }
+        }
+
+        if next_level.len() <= big_level.len() {
+            swap(&mut small_level, &mut next_level)
+        } else {
+            swap(&mut next_level, &mut big_level);
+            swap(&mut next_level, &mut small_level);
+            // big_level = std::mem::replace(&mut next_level, big_level);
+            // small_level = std::mem::replace(&mut next_level, small_level);
+        }
+        next_level.clear();
+
+        level += 1;
+    }
+
+    0
 }
