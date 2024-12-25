@@ -100,9 +100,8 @@ pub fn distance_limited_paths_exist(
             j += 1;
         }
         let index = queries[i][3] as usize;
-        let is_same_set =
-            union_find.find(queries[i][0] as usize) == union_find.find(queries[i][1] as usize);
-        reset(index, is_same_set);
+        let is_connected = union_find.is_connected(queries[i][0] as usize, queries[i][1] as usize);
+        reset(index, is_connected);
     }
 
     ans

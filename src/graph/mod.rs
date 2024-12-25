@@ -1,4 +1,5 @@
 pub mod bfs;
+pub mod dijkstra;
 pub mod mst;
 pub mod topo_sort;
 
