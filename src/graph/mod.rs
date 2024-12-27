@@ -1,3 +1,4 @@
+pub mod bellman_ford;
 pub mod bfs;
 pub mod dijkstra;
 pub mod mst;
