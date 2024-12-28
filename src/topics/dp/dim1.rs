@@ -116,6 +116,41 @@ pub fn num_decodings_ii(s: String) -> i32 {
 }
 
 /**
+ * 264. 丑数 II
+ * https://leetcode.cn/problems/ugly-number-ii/description/
+ */
+pub fn nth_ugly_number(n: i32) -> i32 {
+    let n = n as usize;
+    let mut dp = vec![0; n + 1];
+    dp[1] = 1;
+
+    let mut two = 1;
+    let mut three = 1;
+    let mut five = 1;
+
+    for i in 2..=n {
+        let a = dp[two] * 2;
+        let b = dp[three] * 3;
+        let c = dp[five] * 5;
+
+        let curr = a.min(b).min(c);
+        // 注意 这里不能用else if
+        if curr == a {
+            two += 1;
+        }
+        if curr == b {
+            three += 1;
+        }
+        if curr == c {
+            five += 1;
+        }
+        dp[i] = curr;
+    }
+
+    dp[n]
+}
+
+/**
  * 32. 最长有效括号
  * https://leetcode.cn/problems/longest-valid-parentheses/description/
  */
