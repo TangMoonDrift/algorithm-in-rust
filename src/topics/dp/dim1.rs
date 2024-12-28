@@ -1,6 +1,29 @@
 //! 一维动态规划专题
 
 /**
+ * 983. 最低票价
+ * https://leetcode.cn/problems/minimum-cost-for-tickets/description/
+ */
+pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+    const DURATION: [i32; 3] = [1, 7, 30];
+    const ONE_YEAR: usize = 366;
+    let mut dp = [i32::MAX; ONE_YEAR];
+    let n = days.len();
+    dp[n] = 0;
+
+    for i in (0..n).rev() {
+        for k in 0..3 {
+            let mut j = i;
+            while j < n && days[i] + DURATION[k] > days[j] {
+                j += 1;
+            }
+            dp[i] = dp[i].min(costs[k] + dp[j]);
+        }
+    }
+
+    dp[0]
+}
+/**
  * 91. 解码方法
  * https://leetcode.cn/problems/decode-ways/description/
  */
@@ -40,6 +63,56 @@ pub fn num_decodings(s: String) -> i32 {
     }
 
     next
+}
+
+/**
+ * 639. 解码方法 II
+ * https://leetcode.cn/problems/decode-ways-ii/description/
+ */
+pub fn num_decodings_ii(s: String) -> i32 {
+    const MOD: i64 = 1_000_000_007;
+    let bytes = s.as_bytes();
+    let n = s.len();
+
+    let mut next = 1;
+    let mut next_next = 0;
+
+    for i in (0..n).rev() {
+        let mut curr = 0;
+        if bytes[i] != b'0' {
+            curr = if bytes[i] == b'*' { 9 } else { 1 } * next;
+            if i + 1 < n {
+                if bytes[i] != b'*' {
+                    if bytes[i + 1] != b'*' {
+                        if bytes[i] == b'1' || bytes[i] == b'2' && bytes[i + 1] <= b'6' {
+                            curr += next_next;
+                        }
+                    } else {
+                        if bytes[i] == b'1' {
+                            curr += 9 * next_next;
+                        } else if bytes[i] == b'2' {
+                            curr += 6 * next_next;
+                        }
+                    }
+                } else {
+                    if bytes[i + 1] != b'*' {
+                        if bytes[i + 1] <= b'6' {
+                            curr += 2 * next_next;
+                        } else {
+                            curr += next_next;
+                        }
+                    } else {
+                        curr += 15 * next_next;
+                    }
+                }
+            }
+            curr %= MOD;
+        }
+        next_next = next;
+        next = curr;
+    }
+
+    next as i32
 }
 
 /**
