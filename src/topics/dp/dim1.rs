@@ -176,3 +176,25 @@ pub fn longest_valid_parentheses(s: String) -> i32 {
 
     ans
 }
+
+/**
+ * 940. 不同的子序列 II
+ * https://leetcode.cn/problems/distinct-subsequences-ii/description/
+ */
+pub fn distinct_subseq_ii(s: String) -> i32 {
+    const MOD: i64 = 1_000_000_007;
+
+    let chars = s.chars().collect::<Vec<char>>();
+    let mut record = vec![0; 26];
+    let start = 'a' as usize;
+    let mut all = 1;
+
+    for &char in &chars {
+        let index = char as usize - start;
+        let increment = (all - record[index] + MOD) % MOD;
+        record[index] = (record[index] + increment) % MOD;
+        all = (all + increment) % MOD;
+    }
+
+    ((all - 1 + MOD) % MOD) as i32
+}
