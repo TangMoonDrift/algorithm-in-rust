@@ -185,14 +185,14 @@ pub fn distinct_subseq_ii(s: String) -> i32 {
     const MOD: i64 = 1_000_000_007;
 
     let chars = s.chars().collect::<Vec<char>>();
-    let mut record = vec![0; 26];
+    let mut dp = vec![0; 26];
     let start = 'a' as usize;
     let mut all = 1;
 
     for &char in &chars {
         let index = char as usize - start;
-        let increment = (all - record[index] + MOD) % MOD;
-        record[index] = (record[index] + increment) % MOD;
+        let increment = (all - dp[index] + MOD) % MOD;
+        dp[index] = (dp[index] + increment) % MOD;
         all = (all + increment) % MOD;
     }
 

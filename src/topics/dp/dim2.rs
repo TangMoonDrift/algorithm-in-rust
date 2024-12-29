@@ -29,6 +29,46 @@ pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
 }
 
 /**
+ * 1143. 最长公共子序列
+ * https://leetcode.cn/problems/longest-common-subsequence/description/
+ */
+pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
+    let n = text1.len();
+    let m = text2.len();
+    let (chars1, chars2, rows, cols) = if n >= m {
+        (
+            text1.chars().collect::<Vec<char>>(),
+            text2.chars().collect::<Vec<char>>(),
+            n,
+            m,
+        )
+    } else {
+        (
+            text2.chars().collect::<Vec<char>>(),
+            text1.chars().collect::<Vec<char>>(),
+            m,
+            n,
+        )
+    };
+    let mut dp = vec![0; cols + 1];
+
+    for i in 1..=rows {
+        let mut left_up = 0;
+        for j in 1..=cols {
+            let backup = dp[j];
+            if chars1[i - 1] == chars2[j - 1] {
+                dp[j] = left_up + 1;
+            } else {
+                dp[j] = dp[j].max(dp[j - 1]);
+            }
+            left_up = backup;
+        }
+    }
+
+    dp[cols]
+}
+
+/**
  * 115. 不同的子序列
  * https://leetcode.cn/problems/distinct-subsequences/description/
  */
