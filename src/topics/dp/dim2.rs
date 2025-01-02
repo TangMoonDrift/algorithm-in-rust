@@ -69,6 +69,37 @@ pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
 }
 
 /**
+ * 516. 最长回文子序列
+ * https://leetcode.cn/problems/longest-palindromic-subsequence/description/
+ */
+pub fn longest_palindrome_subseq(s: String) -> i32 {
+    let chars = s.chars().collect::<Vec<char>>();
+    let n = chars.len();
+    let mut dp = vec![0; n];
+    let mut left_down = 0;
+
+    for i in (0..n).rev() {
+        dp[i] = 1;
+        if i + 1 < n {
+            left_down = dp[i + 1];
+            dp[i + 1] = if chars[i] == chars[i + 1] { 2 } else { 1 };
+        }
+
+        for j in (i + 2)..n {
+            let backup = dp[j];
+            if chars[i] == chars[j] {
+                dp[j] = 2 + left_down;
+            } else {
+                dp[j] = dp[j].max(dp[j - 1]);
+            }
+            left_down = backup;
+        }
+    }
+
+    dp[n - 1]
+}
+
+/**
  * 115. 不同的子序列
  * https://leetcode.cn/problems/distinct-subsequences/description/
  */
@@ -134,6 +165,22 @@ mod tests {
             7
         );
         assert_eq!(min_path_sum(vec![vec![1, 2, 3], vec![4, 5, 6]]), 12);
+    }
+
+    #[test]
+    fn test_longest_common_subsequence() {
+        assert_eq!(
+            longest_common_subsequence("abcde".to_string(), "ace".to_string()),
+            3
+        );
+        assert_eq!(
+            longest_common_subsequence("abc".to_string(), "abc".to_string()),
+            3
+        );
+        assert_eq!(
+            longest_common_subsequence("abc".to_string(), "def".to_string()),
+            0
+        );
     }
 
     #[test]
