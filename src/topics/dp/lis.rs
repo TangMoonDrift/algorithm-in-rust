@@ -176,3 +176,38 @@ pub fn k_increasing_ii(arr: Vec<i32>, k: i32) -> i32 {
 
     ans as i32
 }
+
+/**
+ * 646. 最长数对链
+ * https://leetcode.cn/problems/maximum-length-of-pair-chain/description/
+ */
+pub fn find_longest_chain(mut pairs: Vec<Vec<i32>>) -> i32 {
+    pairs.sort_unstable_by(|a, b| a[1].cmp(&b[1]));
+    let (mut pre, mut ans) = (pairs[0][1], 1);
+
+    pairs.iter().skip(1).for_each(|pair| {
+        if pair[0] > pre {
+            pre = pair[1];
+            ans += 1;
+        }
+    });
+
+    ans
+}
+
+pub fn find_longest_chain_ii(mut pairs: Vec<Vec<i32>>) -> i32 {
+    let mut ends = vec![];
+    pairs.sort_unstable_by(|a, b| a[0].cmp(&b[0]));
+    ends.push(pairs[0][1]);
+
+    for pair in pairs.iter().skip(1) {
+        let (start, end) = (pair[0], pair[1]);
+        if start > *ends.last().unwrap() {
+            ends.push(end);
+        } else if let Err(index) = ends.binary_search(&start) {
+            ends[index] = end.min(ends[index]);
+        }
+    }
+
+    ends.len() as i32
+}
