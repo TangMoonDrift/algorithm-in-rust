@@ -126,6 +126,37 @@ pub fn max_value_of_coins(piles: Vec<Vec<i32>>, k: i32) -> i32 {
     dp[k]
 }
 
+/**
+ * 10. 正则表达式匹配
+ * https://leetcode.cn/problems/regular-expression-matching/description/
+ */
+pub fn is_match(s: String, p: String) -> bool {
+    let n = s.len();
+    let m = p.len();
+    let chars_1: Vec<char> = s.chars().collect();
+    let chars_2: Vec<char> = p.chars().collect();
+
+    let mut dp = vec![vec![false; m + 1]; n + 1];
+    dp[n][m] = true;
+
+    for i in (0..=(m - 1)).rev() {
+        dp[n][i] = i + 1 < m && chars_2[i + 1] == '*' && dp[n][i + 2];
+    }
+
+    for i in (0..=(n - 1)).rev() {
+        for j in (0..=(m - 1)).rev() {
+            if j + 1 == m || chars_2[j + 1] != '*' {
+                dp[i][j] = (chars_1[i] == chars_2[j] || chars_2[j] == '.') && dp[i + 1][j + 1];
+            } else {
+                dp[i][j] = dp[i][j + 2]
+                    || ((chars_1[i] == chars_2[j] || chars_2[j] == '.') && dp[i + 1][j]);
+            }
+        }
+    }
+
+    dp[0][0]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
