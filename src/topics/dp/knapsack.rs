@@ -99,6 +99,33 @@ pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
     sum - near(&stones, (sum / 2) as usize) * 2
 }
 
+/**
+ * 2218. 从栈中取出 K 个硬币的最大面值和
+ * https://leetcode.cn/problems/maximum-value-of-k-coins-from-piles/description/
+ */
+pub fn max_value_of_coins(piles: Vec<Vec<i32>>, k: i32) -> i32 {
+    let k = k as usize;
+    let mut dp = vec![0; k + 1];
+    piles.iter().for_each(|pile| {
+        let t = pile.len().min(k);
+        let mut prev_sum = vec![0; t + 1];
+        let mut sum = 0;
+        for i in 0..t {
+            sum += pile[i];
+            prev_sum[i + 1] = sum;
+        }
+
+        for i in (1..=k).rev() {
+            let right = t.min(i);
+            for j in 1..=right {
+                dp[i] = dp[i].max(dp[i - j] + prev_sum[j]);
+            }
+        }
+    });
+
+    dp[k]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
