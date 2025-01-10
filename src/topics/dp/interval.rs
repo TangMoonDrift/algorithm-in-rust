@@ -152,6 +152,41 @@ pub fn count_eval(s: String, result: i32) -> i32 {
     f(&s, 0, n - 1, &mut dp)[result as usize]
 }
 
+/**
+ * 664. 奇怪的打印机
+ * https://leetcode.cn/problems/strange-printer/description/
+ */
+pub fn strange_printer(s: String) -> i32 {
+    let s: Vec<char> = s.chars().collect();
+    let n = s.len();
+    if n == 1 {
+        return 1;
+    }
+
+    let mut dp = vec![vec![0; n]; n];
+    dp[n - 1][n - 1] = 1;
+    for i in 0..(n - 1) {
+        dp[i][i] = 1;
+        dp[i][i + 1] = if s[i] == s[i + 1] { 1 } else { 2 };
+    }
+
+    for l in (0..(n - 2)).rev() {
+        for r in (l + 2)..n {
+            if s[l] == s[r] {
+                dp[l][r] = dp[l][r - 1];
+            } else {
+                let mut ans = i32::MAX;
+                for m in l..r {
+                    ans = ans.min(dp[l][m] + dp[m + 1][r]);
+                }
+                dp[l][r] = ans;
+            }
+        }
+    }
+
+    dp[0][n - 1]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
