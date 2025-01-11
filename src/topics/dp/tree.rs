@@ -150,16 +150,15 @@ pub fn distribute_coins(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
  * https://leetcode.cn/problems/house-robber-iii/description/
  */
 pub fn rob(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
-    fn f(x: Option<Rc<RefCell<TreeNode>>>, yes: i32, no: i32) -> (i32, i32) {
-        match x {
+    fn f(node: Option<Rc<RefCell<TreeNode>>>, yes: i32, no: i32) -> (i32, i32) {
+        match node {
             Some(binding) => {
-                let x = binding.borrow();
-                let mut y = x.val;
-                let mut n = 0;
-                let (yes, no) = f(x.left.clone(), yes, no);
+                let node = binding.borrow();
+                let (mut y, mut n) = (node.val, 0);
+                let (yes, no) = f(node.left.clone(), yes, no);
                 y += no;
                 n += yes.max(no);
-                let (yes, no) = f(x.right.clone(), yes, no);
+                let (yes, no) = f(node.right.clone(), yes, no);
                 y += no;
                 n += yes.max(no);
                 (y, n)
@@ -167,7 +166,40 @@ pub fn rob(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
             None => (0, 0),
         }
     }
-
     let (yes, no) = f(root, 0, 0);
+
     yes.max(no)
+}
+
+/**
+ * 968. 监控二叉树
+ * https://leetcode.cn/problems/binary-tree-cameras/description/
+ */
+pub fn min_camera_cover(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+    fn f(x: Option<Rc<RefCell<TreeNode>>>, ans: i32) -> (i32, i32) {
+        match x {
+            Some(binding) => {
+                let x = binding.borrow();
+                let (ans_left, left) = f(x.left.clone(), ans);
+                let (ans_right, right) = f(x.right.clone(), ans);
+                let ans = ans_left + ans_right;
+                if left == 0 || right == 0 {
+                    return (ans + 1, 2);
+                }
+                if left == 1 && right == 1 {
+                    return (ans, 0);
+                }
+                (ans, 1)
+            }
+            None => (ans, 1),
+        }
+    }
+
+    let (ans, status) = f(root, 0);
+    if status == 0 {
+        return ans + 1;
+    }
+    {
+        return ans;
+    }
 }
