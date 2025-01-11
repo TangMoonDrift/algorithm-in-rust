@@ -74,6 +74,10 @@ pub fn max_sum_bst(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
     f(root).max_bst_sum
 }
 
+/**
+ * 543. 二叉树的直径
+ * https://leetcode.cn/problems/diameter-of-binary-tree/description/
+ */
 pub fn diameter_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
     pub struct Info {
         h: i32,
@@ -101,4 +105,42 @@ pub fn diameter_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
     }
 
     f(root).d
+}
+
+/**
+ * 979. 在二叉树中分配硬币
+ * https://leetcode.cn/problems/distribute-coins-in-binary-tree/description/
+ */
+pub fn distribute_coins(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+    pub struct Info {
+        cnt: i32,
+        sum: i32,
+        step: i32,
+    }
+
+    impl Info {
+        pub fn new(cnt: i32, sum: i32, step: i32) -> Self {
+            Self { cnt, sum, step }
+        }
+    }
+    fn f(x: Option<Rc<RefCell<TreeNode>>>) -> Info {
+        if x.is_none() {
+            return Info::new(0, 0, 0);
+        }
+        let binding = x.unwrap();
+        let x = binding.borrow();
+        let info_left = f(x.left.clone());
+        let info_right = f(x.right.clone());
+
+        let cnts = info_left.cnt + info_right.cnt + 1;
+        let sums = info_left.sum + info_right.sum + x.val;
+        let steps = info_left.step
+            + info_right.step
+            + (info_left.sum - info_left.cnt).abs()
+            + (info_right.sum - info_right.cnt).abs();
+
+        Info::new(cnts, sums, steps)
+    }
+
+    f(root).step
 }
