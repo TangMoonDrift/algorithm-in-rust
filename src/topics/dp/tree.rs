@@ -144,3 +144,30 @@ pub fn distribute_coins(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
 
     f(root).step
 }
+
+/**
+ * 337. 打家劫舍 III
+ * https://leetcode.cn/problems/house-robber-iii/description/
+ */
+pub fn rob(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+    fn f(x: Option<Rc<RefCell<TreeNode>>>, yes: i32, no: i32) -> (i32, i32) {
+        match x {
+            Some(binding) => {
+                let x = binding.borrow();
+                let mut y = x.val;
+                let mut n = 0;
+                let (yes, no) = f(x.left.clone(), yes, no);
+                y += no;
+                n += yes.max(no);
+                let (yes, no) = f(x.right.clone(), yes, no);
+                y += no;
+                n += yes.max(no);
+                (y, n)
+            }
+            None => (0, 0),
+        }
+    }
+
+    let (yes, no) = f(root, 0, 0);
+    yes.max(no)
+}
