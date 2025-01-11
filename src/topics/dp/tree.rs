@@ -3,6 +3,8 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
+use crate::graph::Graph;
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
     pub val: i32,
@@ -235,4 +237,47 @@ pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> i32 {
     }
 
     f(root, target_sum, 0, &mut pre_sum, 0)
+}
+
+pub fn minimum_fuel_cost(roads: Vec<Vec<i32>>, seats: i32) -> i64 {
+    struct Info {
+        person: i64,
+        fuel: i64,
+    }
+
+    impl Info {
+        fn new(person: i64, fuel: i64) -> Self {
+            Self { person, fuel }
+        }
+    }
+
+    const N: usize = 100_001;
+
+    let roads: Vec<Vec<usize>> = roads
+        .iter()
+        .map(|road| road.iter().map(|&city| city as usize).collect())
+        .collect();
+
+    let graph = Graph::build(N, &roads, false);
+
+    fn f(x: usize, parent: usize, seats: i64, graph: &Graph) -> Info {
+        let neighbors = graph.collect_neighbors(x);
+        let mut person = 1;
+        let mut fuel = 0;
+        for &neighbor in &neighbors {
+            let next = neighbor.0;
+            if next == parent {
+                continue;
+            }
+            let info = f(next, x, seats, graph);
+            let p = info.person;
+            let f = info.fuel;
+            person += p;
+            fuel += f;
+            fuel += (p + seats - 1) / seats;
+        }
+        Info::new(person, fuel)
+    }
+
+    f(0, usize::MAX, seats as i64, &graph).fuel
 }
