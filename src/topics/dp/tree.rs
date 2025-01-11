@@ -222,13 +222,12 @@ pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> i32 {
             Some(binding) => {
                 let x = binding.borrow();
                 sum += x.val as i64;
-                ans += pre_sum.get(&(sum - target as i64)).unwrap_or(&0);
-                let new_sum = pre_sum.get(&sum).unwrap_or(&0);
-                pre_sum.insert(sum, new_sum + 1);
+                let diff = sum - target as i64;
+                ans += pre_sum.get(&diff).unwrap_or(&0);
+                pre_sum.entry(sum).and_modify(|s| *s += 1).or_insert(1);
                 ans = f(x.left.clone(), target, sum, pre_sum, ans);
                 ans = f(x.right.clone(), target, sum, pre_sum, ans);
-                let old_sum = pre_sum.get(&sum).unwrap() - 1;
-                pre_sum.entry(sum).and_modify(|s| *s = old_sum);
+                pre_sum.entry(sum).and_modify(|s| *s -= 1);
                 ans
             }
             None => ans,
