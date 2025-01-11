@@ -1,5 +1,6 @@
 //! 树型DP专题
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::rc::Rc;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -199,7 +200,40 @@ pub fn min_camera_cover(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
     if status == 0 {
         return ans + 1;
     }
-    {
-        return ans;
+    return ans;
+}
+
+/**
+ * 437. 路径总和 III\
+ * https://leetcode.cn/problems/path-sum-iii/description/
+ */
+pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> i32 {
+    let mut pre_sum: HashMap<i64, i32> = HashMap::new();
+    pre_sum.insert(0, 1);
+
+    fn f(
+        x: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+        mut sum: i64,
+        pre_sum: &mut HashMap<i64, i32>,
+        mut ans: i32,
+    ) -> i32 {
+        match x {
+            Some(binding) => {
+                let x = binding.borrow();
+                sum += x.val as i64;
+                ans += pre_sum.get(&(sum - target as i64)).unwrap_or(&0);
+                let new_sum = pre_sum.get(&sum).unwrap_or(&0);
+                pre_sum.insert(sum, new_sum + 1);
+                ans = f(x.left.clone(), target, sum, pre_sum, ans);
+                ans = f(x.right.clone(), target, sum, pre_sum, ans);
+                let old_sum = pre_sum.get(&sum).unwrap() - 1;
+                pre_sum.entry(sum).and_modify(|s| *s = old_sum);
+                ans
+            }
+            None => ans,
+        }
     }
+
+    f(root, target_sum, 0, &mut pre_sum, 0)
 }
