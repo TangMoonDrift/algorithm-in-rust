@@ -239,6 +239,10 @@ pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> i32 {
     f(root, target_sum, 0, &mut pre_sum, 0)
 }
 
+/**
+ * 2477. 到达首都的最少油耗
+ * https://leetcode.cn/problems/minimum-fuel-cost-to-report-to-the-capital/description/
+ */
 pub fn minimum_fuel_cost(roads: Vec<Vec<i32>>, seats: i32) -> i64 {
     struct Info {
         person: i64,
