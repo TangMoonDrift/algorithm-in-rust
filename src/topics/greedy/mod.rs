@@ -258,6 +258,63 @@ pub fn minimum_deviation(nums: Vec<i32>) -> i32 {
     ans
 }
 
+/**
+ * 781. 森林中的兔子
+ * https://leetcode.cn/problems/rabbits-in-forest/description/
+ */
+pub fn num_rabbits(answers: Vec<i32>) -> i32 {
+    answers
+        .iter()
+        .fold(HashMap::new(), |mut map, &x| {
+            *map.entry(x).or_insert(0) += 1;
+            map
+        })
+        .iter()
+        .fold(0, |i, (&k, &v)| i + (k + v) / (k + 1) * (k + 1))
+
+    // answers.sort_unstable();
+    // let n = answers.len() as i32;
+
+    // let (mut ans, mut i, mut j) = (0, 0, 1);
+    // while j < n {
+    //     let x = answers[i as usize];
+    //     while j < n && answers[j as usize] == x {
+    //         j += 1;
+    //     }
+    //     ans += (j - i + x) / (x + 1) * (x + 1);
+    //     i = j;
+    // }
+
+    // ans
+}
+
+/**
+ * 2449. 使数组相似的最少操作次数
+ * https://leetcode.cn/problems/minimum-number-of-operations-to-make-arrays-similar/description/
+ */
+pub fn make_similar(nums: Vec<i32>, target: Vec<i32>) -> i64 {
+    let vecs = vec![nums, target]
+        .iter()
+        .map(|v| {
+            let (mut odds, mut evens): (Vec<i64>, Vec<i64>) =
+                v.iter().map(|&x| x as i64).partition(|&x| x % 2 != 0);
+            let mut sorted = Vec::new();
+            odds.sort();
+            evens.sort();
+            sorted.extend(odds);
+            sorted.extend(evens);
+            sorted
+        })
+        .collect::<Vec<Vec<i64>>>();
+
+    let mut ans = 0;
+    for (i, j) in vecs[0].iter().zip(vecs[1].iter()) {
+        ans += (i - j).abs();
+    }
+
+    ans / 4
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
