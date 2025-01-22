@@ -315,6 +315,48 @@ pub fn make_similar(nums: Vec<i32>, target: Vec<i32>) -> i64 {
     ans / 4
 }
 
+/**
+ * 871. 最低加油次数
+ * https://leetcode.cn/problems/minimum-number-of-refueling-stops/description/
+ */
+pub fn min_refuel_stops(target: i32, start_fuel: i32, stations: Vec<Vec<i32>>) -> i32 {
+    if start_fuel >= target {
+        return 0;
+    }
+
+    let mut to = start_fuel;
+    let mut ans = 0;
+
+    let mut heap = BinaryHeap::new();
+    for station in &stations {
+        let distance = station[0];
+        let fuel = station[1];
+        if to < distance {
+            while !heap.is_empty() && to < distance {
+                to += heap.pop().unwrap();
+                ans += 1;
+                if to >= target {
+                    return ans;
+                }
+            }
+            if to < distance {
+                return -1;
+            }
+        }
+        heap.push(fuel);
+    }
+
+    while !heap.is_empty() {
+        to += heap.pop().unwrap();
+        ans += 1;
+        if to >= target {
+            return ans;
+        }
+    }
+
+    -1
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
