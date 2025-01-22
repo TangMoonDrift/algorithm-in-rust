@@ -357,6 +357,25 @@ pub fn min_refuel_stops(target: i32, start_fuel: i32, stations: Vec<Vec<i32>>) -
     -1
 }
 
+/**
+ * 45. 跳跃游戏 II
+ * https://leetcode.cn/problems/jump-game-ii/description/
+ */
+pub fn jump(nums: Vec<i32>) -> i32 {
+    let n = nums.len();
+    let (mut curr, mut next, mut ans) = (0, 0, 0);
+
+    for i in 0..n {
+        if curr < i as i32 {
+            ans += 1;
+            curr = next;
+        }
+        next = next.max(i as i32 + nums[i]);
+    }
+
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
