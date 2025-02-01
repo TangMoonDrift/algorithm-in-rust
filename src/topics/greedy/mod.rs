@@ -376,6 +376,88 @@ pub fn jump(nums: Vec<i32>) -> i32 {
     ans
 }
 
+pub fn max_average_ratio(classes: Vec<Vec<i32>>, extra_students: i32) -> f64 {
+    #[derive(PartialEq)]
+    struct Item(f64, f64, f64);
+
+    impl Ord for Item {
+        fn cmp(&self, other: &Self) -> Ordering {
+            other.2.partial_cmp(&self.2).unwrap_or(Ordering::Equal)
+        }
+    }
+
+    impl PartialOrd for Item {
+        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+            Some(other.cmp(self))
+        }
+    }
+
+    impl Eq for Item {}
+
+    impl Into<Item> for (f64, f64, f64) {
+        fn into(self) -> Item {
+            Item(self.0, self.1, self.2)
+        }
+    }
+    let mut heap: BinaryHeap<Item> = BinaryHeap::new();
+    let n = classes.len();
+    for class in &classes {
+        let a = class[0] as f64;
+        let b = class[1] as f64;
+        heap.push((a, b, (a + 1.0) / (b + 1.0) - a / b).into());
+    }
+
+    for _ in 0..extra_students {
+        let Item(a, b, _) = heap.pop().unwrap();
+        heap.push(
+            (
+                a + 1.0,
+                b + 1.0,
+                (a + 2.0) / (b + 2.0) - (a + 1.0) / (b + 1.0),
+            )
+                .into(),
+        );
+    }
+
+    let mut ans = 0.0;
+    while !heap.is_empty() {
+        let Item(a, b, _) = heap.pop().unwrap();
+        ans += a / b;
+    }
+
+    ans / n as f64
+}
+
+pub fn mincost_to_hire_workers(quality: Vec<i32>, wage: Vec<i32>, k: i32) -> f64 {
+    let n = quality.len();
+    let k = k as usize;
+    let mut id = (0..n).collect::<Vec<_>>();
+    // 按照 r 值排序
+    id.sort_unstable_by(|&i, &j| (wage[i] * quality[j]).cmp(&(wage[j] * quality[i])));
+
+    let mut h = BinaryHeap::new();
+    let mut sum_q = 0;
+    for i in 0..k {
+        h.push(quality[id[i]]);
+        sum_q += quality[id[i]];
+    }
+
+    // 选 r 值最小的 k 名工人
+    let mut ans = sum_q as f64 * wage[id[k - 1]] as f64 / quality[id[k - 1]] as f64;
+
+    // 后面的工人 r 值更大
+    // 但是 sum_q 可以变小，从而可能得到更优的答案
+    for i in k..n {
+        let q = quality[id[i]];
+        if q < *h.peek().unwrap() {
+            sum_q -= h.pop().unwrap() - q;
+            h.push(q);
+            ans = ans.min(sum_q as f64 * wage[id[i]] as f64 / q as f64);
+        }
+    }
+    ans
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

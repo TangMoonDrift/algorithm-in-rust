@@ -211,6 +211,7 @@ pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
 }
 
 /**
+ * 98. 验证二叉搜索树
  * https://leetcode.cn/problems/validate-binary-search-tree/description/
  */
 pub fn is_valid_bst(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
