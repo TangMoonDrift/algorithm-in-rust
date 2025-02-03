@@ -34,48 +34,40 @@ pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
  * https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/
 */
 pub fn length_of_longest_substring(s: String) -> i32 {
-    let n = s.len();
-    if n <= 1 {
-        return n as i32;
-    }
+    let mut last = [-1; 256];
 
-    let mut ans = i32::MIN;
+    let mut ans = 0;
+    let mut l = 0;
+    s.chars()
+        .map(|c| c as usize)
+        .enumerate()
+        .for_each(|(i, c)| {
+            l = l.max(last[c] + 1);
+            ans = ans.max(i - l as usize + 1);
+            last[c] = i as i32;
+        });
 
-    let mut map = HashMap::<char, usize>::new();
-
-    let (mut l, mut r) = (0, 0);
-
-    while r < n {
-        if let Some(v) = map.get(&s.chars().nth(r).unwrap()) {
-            l = (*v + 1).max(l);
-        }
-        ans = ans.max((r - l + 1) as i32);
-        map.insert(s.chars().nth(r).unwrap(), r);
-        r += 1;
-    }
-
-    ans
+    ans as i32
 }
 
 /**
  * https://leetcode.cn/problems/gas-station/
  */
 pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
-    let len = gas.len();
-    let (mut l, mut sum, mut count) = (0, 0, 0);
+    let n = gas.len();
 
-    while l < len {
-        while sum >= 0 {
-            if count == len {
+    let (mut l, mut r, mut sum) = (0, 0, 0);
+    while l < n {
+        sum = 0;
+        while sum + gas[r % n] - cost[r % n] >= 0 {
+            if r - l + 1 == n {
                 return l as i32;
             }
-            let r = (l + count) % len;
-            count += 1;
-            sum += gas[r] - cost[r];
+            sum += gas[r % n] - cost[r % n];
+            r += 1;
         }
-        count -= 1;
-        sum -= gas[l] - cost[l];
-        l += 1;
+        l = r + 1;
+        r = l;
     }
 
     -1
