@@ -3,6 +3,7 @@
 use std::collections::HashMap;
 
 /**
+ * 209. 长度最小的子数组
  * https://leetcode.cn/problems/minimum-size-subarray-sum/description/
  */
 pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
@@ -31,6 +32,7 @@ pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
 }
 
 /**
+ * 3. 无重复字符的最长子串
  * https://leetcode.cn/problems/longest-substring-without-repeating-characters/description/
 */
 pub fn length_of_longest_substring(s: String) -> i32 {
@@ -51,6 +53,7 @@ pub fn length_of_longest_substring(s: String) -> i32 {
 }
 
 /**
+ * 134. 加油站
  * https://leetcode.cn/problems/gas-station/
  */
 pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
@@ -74,6 +77,7 @@ pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
 }
 
 /**
+ * 992. K 个不同整数的子数组
  * https://leetcode.cn/problems/subarrays-with-k-different-integers/description/
  */
 pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
@@ -108,6 +112,7 @@ pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
 }
 
 /**
+ * 395. 至少有 K 个重复字符的最长子串
  * https://leetcode.cn/problems/longest-substring-with-at-least-k-repeating-characters/description/
  */
 pub fn longest_substring(s: String, k: i32) -> i32 {
