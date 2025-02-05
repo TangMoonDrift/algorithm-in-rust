@@ -80,6 +80,28 @@ pub fn trap(height: Vec<i32>) -> i32 {
 }
 
 /**
+ * 881. 救生艇
+ * https://leetcode.cn/problems/boats-to-save-people/description/
+ */
+pub fn num_rescue_boats(mut people: Vec<i32>, limit: i32) -> i32 {
+    people.sort_unstable();
+
+    let (mut l, mut r, mut ans) = (0, people.len() - 1, 0);
+
+    while l < r {
+        if people[l] + people[r] > limit {
+            r -= 1;
+        } else {
+            l += 1;
+            r -= 1;
+        }
+        ans += 1;
+    }
+
+    ans + if l == r { 1 } else { 0 }
+}
+
+/**
  * 11. 盛最多水的容器
  * https://leetcode.cn/problems/container-with-most-water/description/
  */
