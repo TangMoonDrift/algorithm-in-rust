@@ -49,6 +49,37 @@ pub fn find_duplicate(nums: Vec<i32>) -> i32 {
 }
 
 /**
+ * 42. 接雨水
+ * https://leetcode.cn/problems/trapping-rain-water/description/
+ */
+pub fn trap(height: Vec<i32>) -> i32 {
+    let n = height.len();
+    if n <= 2 {
+        return 0;
+    }
+
+    let mut l_max = height[0];
+    let mut r_max = height[n - 1];
+    let mut l = 1;
+    let mut r = n - 2;
+    let mut ans = 0;
+
+    while l <= r {
+        if l_max <= r_max {
+            ans += 0.max(l_max - height[l]);
+            l_max = l_max.max(height[l]);
+            l += 1;
+        } else {
+            ans += 0.max(r_max - height[r]);
+            r_max = r_max.max(height[r]);
+            r -= 1;
+        }
+    }
+
+    ans
+}
+
+/**
  * 11. 盛最多水的容器
  * https://leetcode.cn/problems/container-with-most-water/description/
  */
