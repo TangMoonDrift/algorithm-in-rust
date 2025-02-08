@@ -13,7 +13,7 @@ pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
     for i in 0..n {
         while top_index > 0 && temperatures[stack[top_index - 1]] < temperatures[i] {
             top_index -= 1;
-            let curr: usize = stack[top_index] as usize;
+            let curr = stack[top_index] as usize;
             ans[curr] = (i - curr) as i32;
         }
         stack[top_index] = i;

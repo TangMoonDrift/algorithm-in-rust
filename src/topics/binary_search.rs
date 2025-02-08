@@ -41,48 +41,45 @@ pub fn min_eating_speed(piles: Vec<i32>, h: i32) -> i32 {
  * https://leetcode.cn/problems/split-array-largest-sum/
  */
 pub fn split_array(nums: Vec<i32>, k: i32) -> i32 {
-    let check = |aim: i32| -> bool {
+    let is_feasible = |aim: i32| -> i32 {
         let mut parts = 1;
         let mut sum = 0;
         for &num in &nums {
             if sum + num <= aim {
                 sum += num;
             } else {
-                // 新划分一段
-                if parts == k {
-                    return false;
-                }
                 parts += 1;
                 sum = num;
             }
         }
-        true
+        parts
     };
 
     let mut right = nums.iter().sum::<i32>();
-    let mut left = (*nums.iter().max().unwrap() - 1).max((right - 1) / k);
-    while left + 1 < right {
-        let mid = left + (right - left) / 2;
-        if check(mid) {
-            right = mid;
+    let mut left = (nums.iter().max().copied().unwrap()).max((right + k - 1) / k);
+    let mut ans = 0;
+    while left <= right {
+        let mid = left + ((right - left) >> 1);
+        if is_feasible(mid) <= k {
+            ans = mid;
+            right = mid - 1;
         } else {
-            left = mid;
+            left = mid + 1;
         }
     }
-    right
+
+    ans
 }
 
 /**719. 找出第 k 小的数对距离**
  * https://leetcode.cn/problems/find-k-th-smallest-pair-distance/
  */
-pub fn smallest_distance_pair(nums: Vec<i32>, k: i32) -> i32 {
-    let mut left = 0;
-    let mut mid = 0;
-    let mut right = *nums.iter().max().unwrap() - *nums.iter().min().unwrap();
-    let mut answer = 0;
-    let mut nums = nums;
-    nums.sort();
+pub fn smallest_distance_pair(mut nums: Vec<i32>, k: i32) -> i32 {
     let n = nums.len();
+    let mut left = 0;
+    let mut right = nums.iter().max().copied().unwrap() - nums.iter().min().copied().unwrap();
+    let mut answer = 0;
+    nums.sort();
 
     let is_valid = |target: i32| -> bool {
         let mut count = 0;
@@ -99,7 +96,7 @@ pub fn smallest_distance_pair(nums: Vec<i32>, k: i32) -> i32 {
     };
 
     while left <= right {
-        mid = left + (right - left) / 2;
+        let mid = left + (right - left) / 2;
         if is_valid(mid) {
             answer = mid;
             right = mid - 1;
