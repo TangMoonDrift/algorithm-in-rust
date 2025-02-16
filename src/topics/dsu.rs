@@ -46,19 +46,19 @@ impl UnionFind {
  */
 pub fn min_swaps_couples(row: Vec<i32>) -> i32 {
     let n = row.len();
-    let mut sets = n / 2;
+    let mut sets = n >> 1;
     let mut union_find = UnionFind::new(sets);
 
     for i in (0..n).step_by(2) {
-        let x = row[i] as usize / 2;
-        let y = row[i + 1] as usize / 2;
-        if union_find.find(x) != union_find.find(y) {
-            union_find.union(x, y);
+        let x = row[i] as usize >> 1;
+        let y = row[i + 1] as usize >> 1;
+        if !union_find.is_connected(x, y) {
             sets -= 1;
+            union_find.union(x, y);
         }
     }
 
-    (n / 2 - sets) as i32
+    ((n >> 1) - sets) as i32
 }
 
 /**

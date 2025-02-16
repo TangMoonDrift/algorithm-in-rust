@@ -57,7 +57,7 @@ impl NumMatrix {
 pub fn largest1_bordered_square(grid: Vec<Vec<i32>>) -> i32 {
     let n = grid.len() as i32;
     let m = grid[0].len() as i32;
-    let mut tries = grid.clone();
+    let tries = grid.clone();
     let tries = bulid(n as usize, m as usize, tries);
 
     if sum(&tries, 0, 0, n - 1, m - 1) == 0 {
