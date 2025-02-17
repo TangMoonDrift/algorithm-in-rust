@@ -1,4 +1,5 @@
 //! 拓扑排序专题
+use core::str;
 use std::vec;
 
 use crate::graph::{DynamicGraph, Graph};
@@ -173,6 +174,72 @@ pub fn moves_to_stamp(stamp: String, target: String) -> Vec<i32> {
 
     path.reverse();
     path
+}
+
+/**
+ * 936. 戳印序列(贪心解法)
+ * https://leetcode.cn/problems/stamping-the-sequence/description/
+ */
+struct GreedySolution;
+impl GreedySolution {
+    pub fn moves_to_stamp(stamp: String, target: String) -> Vec<i32> {
+        let stamp: Vec<char> = stamp.chars().collect();
+        let mut target: Vec<char> = target.chars().collect();
+        let n = target.len();
+        let k = stamp.len();
+        let mut result = vec![];
+        // 最大操作次数限制避免无限循环
+        let max_attempts = 10 * n;
+
+        // 逆向贪心算法：从完整覆盖向初始状态逆推
+        while result.len() <= max_attempts {
+            let mut found = false;
+            // 扫描所有可能覆盖位置（包含部分已覆盖区域）
+            for i in 0..=n.checked_sub(k).unwrap_or(0) {
+                if Self::can_replace(&stamp, &target, i) {
+                    // 标记该区域为覆盖
+                    Self::replace_with_question(&mut target, i, k);
+                    result.push(i as i32);
+                    found = true;
+                }
+            }
+            // 提前终止条件：全部标记完成
+            if target.iter().all(|&c| c == '?') {
+                result.reverse(); // 逆序得到正向操作序列
+                return result;
+            }
+            if !found {
+                break;
+            }
+        }
+
+        vec![]
+    }
+
+    /// 检查是否可以将 stamp 应用于 target 的 [pos, pos+k) 区域
+    fn can_replace(stamp: &[char], target: &[char], pos: usize) -> bool {
+        let mut has_unmarked = false;
+        // 必须满足以下条件之一：
+        // 1. 该区域存在未标记字符
+        // 2. 所有字符都与 stamp 对应位置匹配
+        for i in 0..stamp.len() {
+            let target_char = target.get(pos + i).copied().unwrap_or('?');
+            if target_char != '?' {
+                if target_char != stamp[i] {
+                    return false;
+                }
+                has_unmarked = true;
+            }
+        }
+        has_unmarked // 全为 ? 则不能重复覆盖
+    }
+
+    /// 将 target 的 [pos, pos+k) 区域标记为 ?
+    fn replace_with_question(target: &mut Vec<char>, pos: usize, k: usize) {
+        for i in pos..(pos + k).min(target.len()) {
+            target[i] = '?';
+        }
+    }
 }
 
 /**
