@@ -33,7 +33,7 @@ pub fn find_order(num_courses: i32, prerequisites: Vec<Vec<i32>>) -> Vec<i32> {
         l += 1;
         cnt += 1;
         let neighbors = graph.collect_neighbors(curr as usize);
-        for neighbor in &neighbors {
+        for neighbor in neighbors {
             let neighbor = neighbor.0;
             in_degree[neighbor] -= 1;
             if in_degree[neighbor] == 0 {
