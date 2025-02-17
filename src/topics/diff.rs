@@ -52,6 +52,7 @@ impl NumMatrix {
 }
 
 /**
+ * 1139. 最大的以 1 为边界的正方形
  * https://leetcode.cn/problems/largest-1-bordered-square/
  */
 pub fn largest1_bordered_square(grid: Vec<Vec<i32>>) -> i32 {
@@ -117,9 +118,9 @@ pub fn largest1_bordered_square(grid: Vec<Vec<i32>>) -> i32 {
 }
 
 /**
+ * 2132. 用邮票贴满网格图
  * https://leetcode.cn/problems/stamping-the-grid/
  */
-// 时间复杂度O(n*m)，额外空间复杂度O(n*m)
 pub fn possible_to_stamp(grid: Vec<Vec<i32>>, stamp_height: i32, stamp_width: i32) -> bool {
     let n = grid.len();
     let m = grid[0].len();
