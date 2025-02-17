@@ -1,5 +1,7 @@
 //! 拓扑排序专题
-use crate::graph::Graph;
+use std::vec;
+
+use crate::graph::{DynamicGraph, Graph};
 
 /**
  * 210. 课程表 II
@@ -33,17 +35,83 @@ pub fn find_order(num_courses: i32, prerequisites: Vec<Vec<i32>>) -> Vec<i32> {
         l += 1;
         cnt += 1;
         let neighbors = graph.collect_neighbors(curr as usize);
-        for neighbor in neighbors {
-            let neighbor = neighbor.0;
-            in_degree[neighbor] -= 1;
-            if in_degree[neighbor] == 0 {
-                queue[r] = neighbor as i32;
+        for (node, ..) in neighbors {
+            in_degree[node] -= 1;
+            if in_degree[node] == 0 {
+                queue[r] = node as i32;
                 r += 1;
             }
         }
     }
 
     return if cnt == n { queue } else { vec![] };
+}
+
+/**
+ * LCR 114. 火星词典
+ * https://leetcode.cn/problems/Jf1JuT/description/
+ */
+pub fn alien_order(words: Vec<String>) -> String {
+    const A: usize = 'a' as usize;
+    let mut in_degree = [-1; 26];
+    words.iter().for_each(|word| {
+        word.bytes().for_each(|code| {
+            in_degree[code as usize - A] = 0;
+        })
+    });
+
+    let mut graph = DynamicGraph::new(26);
+    for i in 0..(words.len() - 1) {
+        let current = words[i].chars().collect::<Vec<char>>();
+        let next = words[i + 1].chars().collect::<Vec<char>>();
+        let mut j = 0;
+        while j < current.len().min(next.len()) {
+            if current[j] != next[j] {
+                graph.add_edge(current[j] as usize - A, next[j] as usize - A, 0);
+                in_degree[next[j] as usize - A] += 1;
+                break;
+            }
+            j += 1;
+        }
+
+        if j < current.len() && j == next.len() {
+            return String::from("");
+        }
+    }
+
+    let mut queue = vec![0; 26];
+    let (mut l, mut r) = (0, 0);
+    let mut kinds = 0;
+    for i in 0..26 {
+        if in_degree[i] != -1 {
+            kinds += 1;
+        }
+        if in_degree[i] == 0 {
+            queue[r] = i;
+            r += 1;
+        }
+    }
+
+    let mut ans = Vec::new();
+    while l < r {
+        let current = queue[l];
+        l += 1;
+        ans.push(current as u8 + A as u8);
+        let neighbors = graph.neighbors(current);
+        for (node, _) in neighbors {
+            in_degree[node] -= 1;
+            if in_degree[node] == 0 {
+                queue[r] = node;
+                r += 1;
+            }
+        }
+    }
+
+    return if ans.len() == kinds {
+        String::from_utf8(ans).unwrap()
+    } else {
+        String::from("")
+    };
 }
 
 /**
