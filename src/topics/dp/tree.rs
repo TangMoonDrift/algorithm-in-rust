@@ -268,7 +268,7 @@ pub fn minimum_fuel_cost(roads: Vec<Vec<i32>>, seats: i32) -> i64 {
         let neighbors = graph.collect_neighbors(x);
         let mut person = 1;
         let mut fuel = 0;
-        for &neighbor in &neighbors {
+        for neighbor in neighbors {
             let next = neighbor.0;
             if next == parent {
                 continue;

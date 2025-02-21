@@ -50,8 +50,8 @@ impl Graph {
         self.cnt += 1;
     }
 
-    pub fn collect_neighbors(&self, from: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
-        let mut index = self.head[from];
+    pub fn collect_neighbors(&self, node: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
+        let mut index = self.head[node];
         std::iter::from_fn(move || {
             if index == 0 {
                 None

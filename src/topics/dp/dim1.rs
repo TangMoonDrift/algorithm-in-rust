@@ -81,28 +81,30 @@ pub fn num_decodings_ii(s: String) -> i32 {
         let mut curr = 0;
         if bytes[i] != b'0' {
             curr = if bytes[i] == b'*' { 9 } else { 1 } * next;
+            curr %= MOD;
             if i + 1 < n {
-                if bytes[i] != b'*' {
-                    if bytes[i + 1] != b'*' {
+                match (bytes[i] == b'*', bytes[i + 1] == b'*') {
+                    (true, true) => {
+                        curr += next_next * 15;
+                    }
+                    (true, false) => {
+                        if bytes[i + 1] > b'6' {
+                            curr += next_next * 1;
+                        } else {
+                            curr += next_next * 2;
+                        }
+                    }
+                    (false, false) => {
                         if bytes[i] == b'1' || bytes[i] == b'2' && bytes[i + 1] <= b'6' {
                             curr += next_next;
                         }
-                    } else {
-                        if bytes[i] == b'1' {
-                            curr += 9 * next_next;
-                        } else if bytes[i] == b'2' {
-                            curr += 6 * next_next;
-                        }
                     }
-                } else {
-                    if bytes[i + 1] != b'*' {
-                        if bytes[i + 1] <= b'6' {
-                            curr += 2 * next_next;
-                        } else {
-                            curr += next_next;
+                    (false, true) => {
+                        if bytes[i] == b'1' {
+                            curr += next_next * 9;
+                        } else if bytes[i] == b'2' {
+                            curr += next_next * 6;
                         }
-                    } else {
-                        curr += 15 * next_next;
                     }
                 }
             }

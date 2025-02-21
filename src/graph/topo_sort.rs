@@ -342,7 +342,7 @@ pub fn maximum_invitations(favorite: Vec<i32>) -> i32 {
     let mut in_degree = vec![0; n];
     let mut queue = vec![0; n];
     let (mut l, mut r) = (0, 0);
-    let mut deep = vec![0; n];
+    let mut depth = vec![0; n];
 
     for i in 0..n {
         in_degree[favorite[i] as usize] += 1;
@@ -358,7 +358,7 @@ pub fn maximum_invitations(favorite: Vec<i32>) -> i32 {
         let curr = queue[l];
         l += 1;
         let next = favorite[curr] as usize;
-        deep[next] = deep[next].max(deep[curr] + 1);
+        depth[next] = depth[next].max(depth[curr] + 1);
         in_degree[next] -= 1;
         if in_degree[next] == 0 {
             queue[r] = next;
@@ -380,7 +380,7 @@ pub fn maximum_invitations(favorite: Vec<i32>) -> i32 {
                 j = favorite[j] as usize;
             }
             if ring_size == 2 {
-                sum_of_small_ring += 2 + deep[i] + deep[favorite[i] as usize];
+                sum_of_small_ring += 2 + depth[i] + depth[favorite[i] as usize];
             } else {
                 sum_of_big_ring = sum_of_big_ring.max(ring_size);
             }

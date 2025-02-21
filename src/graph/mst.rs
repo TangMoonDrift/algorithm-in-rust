@@ -1,6 +1,10 @@
-//! 最小生成树专题
+//! 最小生成树（Minimum Spanning Tree）专题
+
+//! 最小生成树的英文是 Minimum Spanning Tree（简称 MST）。
+//! 它是图论中的一个概念，指在一个带权无向图中，边的权重之和最小的生成树（即连接所有顶点的无环子图）。
+//! 常见的算法包括 Prim 算法和 Kruskal 算法。
+
 use crate::topics::dsu::UnionFind;
-use std::io::{self, BufRead};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct Edge {
@@ -17,27 +21,6 @@ impl Edge {
             weight,
         }
     }
-}
-
-fn read_input() -> io::Result<(usize, Vec<Edge>)> {
-    let stdin = io::stdin();
-    let mut lines = stdin.lock().lines();
-    let first_line = lines.next().unwrap()?;
-    let mut parts = first_line.split_whitespace();
-    let n: usize = parts.next().unwrap().parse().unwrap();
-    let m: usize = parts.next().unwrap().parse().unwrap();
-
-    let mut edges = Vec::with_capacity(m);
-    for _ in 0..m {
-        let line = lines.next().unwrap()?;
-        let mut parts = line.split_whitespace();
-        let source: usize = parts.next().unwrap().parse().unwrap();
-        let destination: usize = parts.next().unwrap().parse().unwrap();
-        let weight: i32 = parts.next().unwrap().parse().unwrap();
-        edges.push(Edge::new(source, destination, weight));
-    }
-
-    Ok((n, edges))
 }
 
 fn kruskal(mut edges: Vec<Edge>, number_of_vertices: usize) -> (i32, Vec<Edge>) {
