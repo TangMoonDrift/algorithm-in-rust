@@ -36,19 +36,9 @@ pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
     let n = text1.len();
     let m = text2.len();
     let (chars1, chars2, rows, cols) = if n >= m {
-        (
-            text1.chars().collect::<Vec<char>>(),
-            text2.chars().collect::<Vec<char>>(),
-            n,
-            m,
-        )
+        (text1.as_bytes(), text2.as_bytes(), n, m)
     } else {
-        (
-            text2.chars().collect::<Vec<char>>(),
-            text1.chars().collect::<Vec<char>>(),
-            m,
-            n,
-        )
+        (text2.as_bytes(), text1.as_bytes(), m, n)
     };
     let mut dp = vec![0; cols + 1];
 

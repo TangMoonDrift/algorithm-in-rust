@@ -30,22 +30,6 @@ pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
 pub fn num_decodings(s: String) -> i32 {
     let s = s.as_bytes();
     let n = s.len();
-
-    // let mut dp = vec![0; n + 1];
-    // dp[n] = 1;
-    // for i in (0..n).rev() {
-    //     if s[i] == b'0' {
-    //         dp[i] = 0;
-    //     } else {
-    //         dp[i] = dp[i + 1];
-    //         if i + 1 < n && (s[i] == b'1' || s[i] == b'2' && s[i + 1] <= b'6') {
-    //             dp[i] += dp[i + 2];
-    //         }
-    //     }
-    // }
-
-    // dp[0]
-
     let mut next_next = 0;
     let mut next = 1;
     for i in (0..n).rev() {
@@ -199,4 +183,37 @@ pub fn distinct_subseq_ii(s: String) -> i32 {
     }
 
     ((all - 1 + MOD) % MOD) as i32
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn test_mincost_tickets() {
+        assert_eq!(mincost_tickets(vec![1, 4, 6, 7, 8, 20], vec![2, 7, 15]), 11);
+        assert_eq!(
+            mincost_tickets(vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 30, 31], vec![2, 7, 15]),
+            17
+        );
+    }
+
+    #[test]
+    fn test_num_decodings() {
+        assert_eq!(num_decodings("12".to_string()), 2);
+        assert_eq!(num_decodings("226".to_string()), 3);
+        assert_eq!(num_decodings("06".to_string()), 0);
+    }
+
+    #[test]
+    fn test_num_decodings_ii() {
+        assert_eq!(num_decodings_ii("*".to_string()), 9);
+        assert_eq!(num_decodings_ii("1*".to_string()), 18);
+        assert_eq!(num_decodings_ii("2*".to_string()), 15);
+        assert_eq!(num_decodings_ii("**".to_string()), 96);
+    }
+
+    #[test]
+    fn test_nth_ugly_number() {
+        assert_eq!(nth_ugly_number(1), 1);
+    }
 }
