@@ -135,6 +135,12 @@ mod tests {
     }
 
     #[test]
+    fn test_profitable_schemes() {
+        assert_eq!(profitable_schemes(5, 3, vec![2, 2], vec![2, 3]), 2);
+        assert_eq!(profitable_schemes(10, 5, vec![2, 3, 5], vec![6, 7, 8]), 7);
+    }
+
+    #[test]
     fn test_is_scramble() {
         assert_eq!(is_scramble("great".to_string(), "rgeat".to_string()), true);
         assert_eq!(is_scramble("abc".to_string(), "bca".to_string()), true);
