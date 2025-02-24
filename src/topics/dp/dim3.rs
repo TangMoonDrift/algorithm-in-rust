@@ -59,6 +59,46 @@ pub fn profitable_schemes(n: i32, min_profit: i32, group: Vec<i32>, profit: Vec<
 }
 
 /**
+ * 688. 骑士在棋盘上的概率
+ * https://leetcode.cn/problems/knight-probability-in-chessboard/description/
+ */
+pub fn knight_probability(n: i32, k: i32, row: i32, column: i32) -> f64 {
+    const DIRS: [(i32, i32); 8] = [
+        (-2, 1),
+        (-2, -1),
+        (2, 1),
+        (2, -1),
+        (-1, 2),
+        (-1, -2),
+        (1, 2),
+        (1, -2),
+    ];
+    let mut dp = vec![vec![vec![None; k as usize + 1]; n as usize]; n as usize];
+
+    fn f(n: i32, i: i32, j: i32, k: i32, dp: &mut Vec<Vec<Vec<Option<f64>>>>) -> f64 {
+        if i < 0 || i >= n || j < 0 || j >= n {
+            return 0.0;
+        }
+        if let Some(v) = dp[i as usize][j as usize][k as usize] {
+            return v;
+        }
+
+        let mut ans = 0.0;
+        if k == 0 {
+            ans = 1.0;
+        } else {
+            for &(dx, dy) in DIRS.iter() {
+                ans += f(n, i + dx, j + dy, k - 1, dp) / 8.0;
+            }
+        }
+        dp[i as usize][j as usize][k as usize] = Some(ans);
+        ans
+    }
+
+    f(n, row, column, k, &mut dp)
+}
+
+/**
  * 87. 扰乱字符串
  * https://leetcode.cn/problems/scramble-string/description/
  */

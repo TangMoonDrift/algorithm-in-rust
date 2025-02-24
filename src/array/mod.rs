@@ -1,3 +1,4 @@
+pub mod maximum_sum_of_subarrays;
 pub mod search;
 pub mod sort;
 
