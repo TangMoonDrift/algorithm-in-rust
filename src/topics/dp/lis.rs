@@ -38,13 +38,15 @@ pub fn length_of_lis(nums: Vec<i32>) -> i32 {
 }
 
 pub fn length_of_lis_ii(nums: Vec<i32>) -> i32 {
-    let mut ends = vec![nums[0]];
+    let mut ends = vec![];
 
-    for &num in nums.iter().skip(1) {
-        if num > *ends.last().unwrap() {
-            ends.push(num);
-        } else if let Err(index) = ends.binary_search(&num) {
-            ends[index] = num;
+    for &num in &nums {
+        if let Err(index) = ends.binary_search(&num) {
+            if index == ends.len() {
+                ends.push(num); // 如果 num 大于 ends 中的所有值，追加到 ends
+            } else {
+                ends[index] = num; // 否则，替换 ends[index] 为 num
+            }
         }
     }
 
@@ -80,10 +82,29 @@ pub fn max_envelopes(mut envelopes: Vec<Vec<i32>>) -> i32 {
 
     for envelope in &envelopes {
         let height = envelope[1];
-        if height > *ends.last().unwrap_or(&0) {
-            ends.push(height);
-        } else if let Err(index) = ends.binary_search(&height) {
-            ends[index] = height;
+        // if height > *ends.last().unwrap_or(&0) {
+        //     ends.push(height);
+        // } else if let Err(index) = ends.binary_search(&height) {
+        //     ends[index] = height;
+        // }
+
+        // match ends.binary_search(&height) {
+        //     Ok(_) => {}
+        //     Err(index) => {
+        //         if index == ends.len() {
+        //             ends.push(height);
+        //         } else if let Some(old) = ends.get_mut(index) {
+        //             *old = height;
+        //         }
+        //     }
+        // }
+
+        if let Err(index) = ends.binary_search(&height) {
+            if index == ends.len() {
+                ends.push(height);
+            } else {
+                ends[index] = height;
+            }
         }
     }
 

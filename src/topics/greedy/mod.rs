@@ -12,11 +12,7 @@ struct Node(i32, usize, usize);
 
 impl Ord for Node {
     fn cmp(&self, other: &Self) -> Ordering {
-        if self.0 == other.0 {
-            self.1.cmp(&other.1)
-        } else {
-            self.0.cmp(&other.0)
-        }
+        self.0.cmp(&other.0).then(self.1.cmp(&other.1))
     }
 }
 

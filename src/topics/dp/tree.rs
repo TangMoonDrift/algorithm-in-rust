@@ -179,30 +179,30 @@ pub fn rob(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
  * https://leetcode.cn/problems/binary-tree-cameras/description/
  */
 pub fn min_camera_cover(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
-    fn f(x: Option<Rc<RefCell<TreeNode>>>, ans: i32) -> (i32, i32) {
+    fn f(x: Option<Rc<RefCell<TreeNode>>>, cost: i32) -> (i32, i32) {
         match x {
             Some(binding) => {
                 let x = binding.borrow();
-                let (ans_left, left) = f(x.left.clone(), ans);
-                let (ans_right, right) = f(x.right.clone(), ans);
-                let ans = ans_left + ans_right;
-                if left == 0 || right == 0 {
-                    return (ans + 1, 2);
+                let (cost_left, status_left) = f(x.left.clone(), cost);
+                let (cost_right, status_right) = f(x.right.clone(), cost);
+                let cost = cost_left + cost_right;
+                if status_left == 0 || status_right == 0 {
+                    return (cost + 1, 2);
                 }
-                if left == 1 && right == 1 {
-                    return (ans, 0);
+                if status_left == 1 && status_right == 1 {
+                    return (cost, 0);
                 }
-                (ans, 1)
+                (cost, 1)
             }
-            None => (ans, 1),
+            None => (cost, 1),
         }
     }
 
-    let (ans, status) = f(root, 0);
+    let (cost, status) = f(root, 0);
     if status == 0 {
-        return ans + 1;
+        return cost + 1;
     }
-    return ans;
+    return cost;
 }
 
 /**

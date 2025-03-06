@@ -187,6 +187,59 @@ pub fn strange_printer(s: String) -> i32 {
     dp[0][n - 1]
 }
 
+/**
+ * 730. 统计不同回文子序列
+ * https://leetcode.cn/problems/count-different-palindromic-subsequences/description/
+ */
+pub fn count_palindromic_subsequences(s: String) -> i32 {
+    const MOD: i64 = 1_000_000_007;
+    let s = s.as_bytes();
+    let n = s.len();
+
+    // 初始化 last 数组
+    let mut last = vec![-1; 256];
+    let mut left = vec![0; n];
+    for i in 0..n {
+        left[i] = last[s[i] as usize] as usize;
+        last[s[i] as usize] = i as i32;
+    }
+
+    // 重置 last 数组
+    last.fill(n as i32);
+    let mut right = vec![0; n];
+    for i in (0..n).rev() {
+        right[i] = last[s[i] as usize] as usize;
+        last[s[i] as usize] = i as i32;
+    }
+
+    // 初始化 dp 数组
+    let mut dp = vec![vec![0; n]; n];
+    for i in 0..n {
+        dp[i][i] = 1;
+    }
+
+    // 动态规划计算
+    for i in (0..n - 1).rev() {
+        for j in i + 1..n {
+            if s[i] != s[j] {
+                dp[i][j] = (dp[i][j - 1] + dp[i + 1][j] - dp[i + 1][j - 1] + MOD) % MOD;
+            } else {
+                let l = right[i];
+                let r = left[j];
+                if l > r {
+                    dp[i][j] = (dp[i + 1][j - 1] * 2 + 2) % MOD;
+                } else if l == r {
+                    dp[i][j] = (dp[i + 1][j - 1] * 2 + 1) % MOD;
+                } else {
+                    dp[i][j] = (dp[i + 1][j - 1] * 2 - dp[l + 1][r - 1] + MOD) % MOD;
+                }
+            }
+        }
+    }
+
+    dp[0][n - 1] as i32
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

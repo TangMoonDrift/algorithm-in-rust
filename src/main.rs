@@ -3,7 +3,7 @@ mod bit;
 mod graph;
 mod hash;
 mod heap;
-mod link;
+mod linked_list;
 mod queue;
 mod stack;
 mod topics;
