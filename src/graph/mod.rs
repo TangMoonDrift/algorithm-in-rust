@@ -103,16 +103,16 @@ impl DynamicGraph {
     }
 
     pub fn build(n: usize, edges: &[Vec<usize>], directed: bool) -> Self {
-        let mut instanc = Self::new(n);
+        let mut instance = Self::new(n);
         for edge in edges {
             let (from, to) = (edge[0], edge[1]);
             let weight = edge.get(2).copied().unwrap_or(0);
-            instanc.add_edge(from, to, weight);
+            instance.add_edge(from, to, weight);
             if !directed {
-                instanc.add_edge(to, from, weight);
+                instance.add_edge(to, from, weight);
             }
         }
-        instanc
+        instance
     }
 
     pub fn add_edge(&mut self, from: usize, to: usize, weight: usize) {

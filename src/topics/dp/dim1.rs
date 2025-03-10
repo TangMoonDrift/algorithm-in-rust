@@ -33,10 +33,8 @@ pub fn num_decodings(s: String) -> i32 {
     let mut next_next = 0;
     let mut next = 1;
     for i in (0..n).rev() {
-        let mut cur;
-        if s[i] == b'0' {
-            cur = 0;
-        } else {
+        let mut cur = 0;
+        if s[i] != b'0' {
             cur = next;
             if i + 1 < n && (s[i] == b'1' || s[i] == b'2' && s[i + 1] <= b'6') {
                 cur += next_next;

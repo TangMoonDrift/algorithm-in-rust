@@ -266,7 +266,7 @@ pub fn num_rabbits(answers: Vec<i32>) -> i32 {
             map
         })
         .iter()
-        .fold(0, |i, (&k, &v)| i + (k + v) / (k + 1) * (k + 1))
+        .fold(0, |i, (&k, &v)| i + (v + k + 1 - 1) / (k + 1) * (k + 1))
 
     // answers.sort_unstable();
     // let n = answers.len() as i32;
@@ -289,26 +289,28 @@ pub fn num_rabbits(answers: Vec<i32>) -> i32 {
  * https://leetcode.cn/problems/minimum-number-of-operations-to-make-arrays-similar/description/
  */
 pub fn make_similar(nums: Vec<i32>, target: Vec<i32>) -> i64 {
-    let vecs = vec![nums, target]
-        .iter()
-        .map(|v| {
-            let (mut odds, mut evens): (Vec<i64>, Vec<i64>) =
-                v.iter().map(|&x| x as i64).partition(|&x| x % 2 != 0);
-            let mut sorted = Vec::new();
-            odds.sort();
-            evens.sort();
-            sorted.extend(odds);
-            sorted.extend(evens);
-            sorted
-        })
-        .collect::<Vec<Vec<i64>>>();
+    // 定义公共处理函数避免重复代码
+    fn process(v: &[i32]) -> Vec<i64> {
+        let (mut odds, mut evens): (Vec<i64>, Vec<i64>) =
+            v.iter().map(|&x| x as i64).partition(|&x| x % 2 != 0);
 
-    let mut ans = 0;
-    for (i, j) in vecs[0].iter().zip(vecs[1].iter()) {
-        ans += (i - j).abs();
+        odds.sort_unstable(); // 使用更快的非稳定排序
+        evens.sort_unstable();
+        odds.extend(evens); // 直接复用已分配的vec
+        odds // 返回组合后的结果
     }
 
-    ans / 4
+    // 并行处理两个输入数组
+    let nums_sorted = process(&nums);
+    let target_sorted = process(&target);
+
+    // 使用迭代器优化差值计算
+    nums_sorted
+        .iter()
+        .zip(target_sorted.iter())
+        .map(|(a, b)| (a - b).abs())
+        .sum::<i64>()
+        / 4
 }
 
 /**
@@ -372,6 +374,10 @@ pub fn jump(nums: Vec<i32>) -> i32 {
     ans
 }
 
+/**
+ * 1792. 最大平均通过率
+ * https://leetcode.cn/problems/maximum-average-pass-ratio/description/
+ */
 pub fn max_average_ratio(classes: Vec<Vec<i32>>, extra_students: i32) -> f64 {
     #[derive(PartialEq)]
     struct Item(f64, f64, f64);
@@ -424,6 +430,10 @@ pub fn max_average_ratio(classes: Vec<Vec<i32>>, extra_students: i32) -> f64 {
     ans / n as f64
 }
 
+/**
+ * 857. 雇佣 K 名工人的最低成本
+ * https://leetcode.cn/problems/minimum-cost-to-hire-k-workers/description/
+ */
 pub fn mincost_to_hire_workers(quality: Vec<i32>, wage: Vec<i32>, k: i32) -> f64 {
     let n = quality.len();
     let k = k as usize;
