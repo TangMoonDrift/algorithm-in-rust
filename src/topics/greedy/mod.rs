@@ -3,7 +3,7 @@ pub mod utils;
 use std::cmp::Ordering;
 use std::{
     cmp::Reverse,
-    collections::{BTreeSet, BinaryHeap, HashMap},
+    collections::{BTreeSet, BinaryHeap, HashMap, HashSet},
 };
 use utils::power;
 
@@ -464,6 +464,40 @@ pub fn mincost_to_hire_workers(quality: Vec<i32>, wage: Vec<i32>, k: i32) -> f64
     ans
 }
 
+/**
+ * 计算点组成的正方形数量
+ */
+pub fn count_squares(points: Vec<(i32, i32)>) -> usize {
+    let point_set: HashSet<(i32, i32)> = points.iter().cloned().collect();
+    let mut count = 0;
+    let n = points.len();
+
+    for i in 0..n {
+        let (x1, y1) = points[i];
+        for j in (i + 1)..n {
+            let (x2, y2) = points[j];
+            let dx = x2 - x1;
+            let dy = y2 - y1;
+
+            // 计算逆时针旋转90度后的两个点
+            let (x3, y3) = (x1 - dy, y1 + dx);
+            let (x4, y4) = (x2 - dy, y2 + dx);
+            if point_set.contains(&(x3, y3)) && point_set.contains(&(x4, y4)) {
+                count += 1;
+            }
+
+            // 计算顺时针旋转90度后的两个点
+            let (x5, y5) = (x1 + dy, y1 - dx);
+            let (x6, y6) = (x2 + dy, y2 - dx);
+            if point_set.contains(&(x5, y5)) && point_set.contains(&(x6, y6)) {
+                count += 1;
+            }
+        }
+    }
+
+    count / 4
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -492,5 +526,29 @@ mod tests {
     fn test_min_days() {
         assert_eq!(min_days(10), 4);
         assert_eq!(min_days(6), 3);
+    }
+
+    #[test]
+    fn test_squares() {
+        // 标准正方形
+        let points = vec![(0, 0), (0, 1), (1, 0), (1, 1)];
+        assert_eq!(count_squares(points), 1);
+
+        // 两个独立的正方形
+        let points = vec![
+            (0, 0),
+            (0, 1),
+            (1, 0),
+            (1, 1),
+            (2, 0),
+            (2, 1),
+            (3, 0),
+            (3, 1),
+        ];
+        assert_eq!(count_squares(points), 2);
+
+        // 无正方形
+        let points = vec![(0, 0), (1, 0), (2, 0), (3, 0)];
+        assert_eq!(count_squares(points), 0);
     }
 }
