@@ -1,3 +1,9 @@
+//! 数论专题
+pub mod power;
+
+/**
+ * how to find the prime factors of a number
+ */
 pub fn prime_factors(n: i32) -> Vec<i32> {
     let mut factors = vec![];
     let mut n = n;
@@ -81,4 +87,25 @@ pub fn largest_component_size(nums: Vec<i32>) -> i32 {
     });
 
     *union_find.size.iter().max().unwrap() as i32
+}
+
+/**
+ * 204. 计数质数
+ * https://leetcode.cn/problems/count-primes/description/
+ */
+pub fn count_primes(n: i32) -> i32 {
+    let n = n as usize;
+    let mut d = vec![true; n];
+    let mut count = 0;
+    for i in 2..n {
+        if d[i] {
+            count += 1;
+            let mut j = i * i;
+            while j < n {
+                d[j] = false;
+                j += i;
+            }
+        }
+    }
+    count
 }

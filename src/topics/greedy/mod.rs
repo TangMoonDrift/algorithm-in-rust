@@ -1,12 +1,11 @@
 pub mod utils;
 
+use crate::number_theoretic::power::power;
 use std::cmp::Ordering;
 use std::{
     cmp::Reverse,
     collections::{BTreeSet, BinaryHeap, HashMap, HashSet},
 };
-use utils::power;
-
 #[derive(Eq, PartialEq)]
 struct Node(i32, usize, usize);
 
