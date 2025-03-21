@@ -1,17 +1,16 @@
-use super::{heap_insert, heapify, merge};
+use rand::prelude::*;
 
 pub struct Sort<'a, T>
 where
-    T: PartialOrd + Copy,
+    T: Ord + PartialOrd + Copy,
 {
     array: &'a mut [T],
 }
 
 impl<'a, T> Sort<'a, T>
 where
-    T: PartialOrd + Copy,
+    T: Ord + PartialOrd + Copy,
 {
-    // 获取可排序的可变数组引用
     pub fn from(array: &'a mut [T]) -> Self {
         Self { array }
     }
@@ -23,7 +22,6 @@ where
         (self.array[a], self.array[b]) = (self.array[b], self.array[a]);
     }
 
-    // 选择排序
     pub fn select_sort(&mut self) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
@@ -41,7 +39,6 @@ where
         self
     }
 
-    // 冒泡排序
     pub fn bubble_sort(&mut self) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
@@ -57,7 +54,6 @@ where
         self
     }
 
-    // 插入排序
     pub fn insert_sort(&mut self) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
@@ -73,7 +69,6 @@ where
         self
     }
 
-    // 归并排序
     pub fn merge_sort(&mut self) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
@@ -88,7 +83,7 @@ where
                     break;
                 }
                 let r = (l + (pace << 1) - 1).min(len - 1);
-                merge(self.array, l, m, r);
+                Self::merge(self.array, l, m, r);
                 l = r + 1;
             }
             pace <<= 1;
@@ -96,7 +91,6 @@ where
         self
     }
 
-    // 归并排序递归方式
     pub fn merge_sort_recursion(&mut self, l: usize, r: usize) -> &mut Self {
         let len = self.array.len();
         if len <= 1 {
@@ -108,8 +102,44 @@ where
         let m = l + (r - l) / 2;
         self.merge_sort_recursion(l, m);
         self.merge_sort_recursion(m + 1, r);
-        merge(self.array, l, m, r);
+        Self::merge(self.array, l, m, r);
         self
+    }
+
+    fn merge(array: &mut [T], l: usize, m: usize, r: usize) {
+        let len = array.len();
+        let first: T = array[0];
+        let mut help: Vec<T> = vec![first; len];
+
+        let mut a = l;
+        let mut b = m + 1;
+        let mut i = l;
+        while a <= m && b <= r {
+            if array[a] > array[b] {
+                help[i] = array[b];
+                b += 1;
+            } else {
+                help[i] = array[a];
+                a += 1;
+            }
+            i += 1;
+        }
+
+        while a <= m {
+            help[i] = array[a];
+            i += 1;
+            a += 1;
+        }
+
+        while b <= r {
+            help[i] = array[b];
+            i += 1;
+            b += 1;
+        }
+
+        for i in l..=r {
+            array[i] = help[i];
+        }
     }
 
     pub fn heap_sort(&mut self) -> &mut Self {
@@ -118,14 +148,79 @@ where
             return self;
         }
         for i in 0..len {
-            heap_insert(&mut self.array, i);
+            Self::heap_insert(&mut self.array, i);
         }
         let mut size = len;
         while size > 1 {
             size -= 1;
             self.swap(0, size);
-            heapify(&mut self.array, 0, size)
+            Self::heapify(&mut self.array, 0, size)
         }
         self
     }
+
+    fn heap_insert(array: &mut [T], index: usize) {
+        let mut i = index as isize;
+        let mut f_i = if i - 1 >= 0 { (i - 1) / 2 } else { 0 };
+        while array[i as usize] > array[f_i as usize] {
+            (array[i as usize], array[f_i as usize]) = (array[f_i as usize], array[i as usize]);
+            i = f_i;
+            f_i = if i - 1 >= 0 { (i - 1) / 2 } else { 0 };
+        }
+    }
+
+    fn heapify(array: &mut [T], index: usize, size: usize) {
+        let mut i = index;
+        let mut l = i * 2 + 1;
+        while l < size {
+            let mut best = if l + 1 < size && array[l + 1] > array[l] {
+                l + 1
+            } else {
+                l
+            };
+            best = if array[i] > array[best] { i } else { best };
+            if best == index {
+                break;
+            }
+            (array[i], array[best]) = (array[best], array[i]);
+            i = best;
+            l = i * 2 + 1;
+        }
+    }
+}
+
+pub fn random_quick_sort<T: Ord + Copy>(array: &mut [T]) {
+    if array.len() <= 1 {
+        return;
+    }
+
+    let mut rng = rand::rng();
+    let pivot_idx = rng.random_range(0..array.len());
+    array.swap(0, pivot_idx);
+
+    let pivot_pos = partition(array);
+    let (left, right) = array.split_at_mut(pivot_pos);
+    random_quick_sort(left);
+    random_quick_sort(&mut right[1..]);
+}
+
+fn partition<T: Ord + Copy>(array: &mut [T]) -> usize {
+    let pivot = array[0];
+    let mut left = 1;
+    let mut right = array.len() - 1;
+
+    while left <= right {
+        while left <= right && array[left] <= pivot {
+            left += 1;
+        }
+        while left <= right && array[right] >= pivot {
+            right -= 1;
+        }
+        if left < right {
+            array.swap(left, right);
+        }
+    }
+
+    array.swap(0, right);
+    right
 }

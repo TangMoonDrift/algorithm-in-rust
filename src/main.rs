@@ -9,4 +9,8 @@ mod queue;
 mod stack;
 mod topics;
 
-fn main() {}
+fn main() {
+    let mut array = [2, 1, 4, 3, 6, 5, 8, 7, 10, 9];
+    array::sort::random_quick_sort(&mut array);
+    println!("{:?}", array);
+}
