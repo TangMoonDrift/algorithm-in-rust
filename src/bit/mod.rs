@@ -1,3 +1,53 @@
+use core::num;
+
+fn is_odd(num: i32) -> bool {
+    num & 1 == 1
+}
+
+fn is_even(num: i32) -> bool {
+    num & 1 == 0
+}
+
+/**
+ * 零一翻转
+ * 1变0，0变1
+ */
+fn flip(num: i32) -> i32 {
+    (num ^ 1) & 1
+}
+
+fn sign(num: i32) -> i32 {
+    flip((num >> 31) & 1)
+}
+
+pub fn get_greater(x: i32, y: i32) -> i32 {
+    let z = x - y;
+    let return_x = sign(z);
+    let return_y = flip(return_x);
+    return_x * x + return_y * y
+}
+
+pub fn get_lesser(x: i32, y: i32) -> i32 {
+    let z = x - y;
+    let return_x = flip(sign(z));
+    let return_y = flip(return_x);
+    return_x * x + return_y * y
+}
+
+pub fn get_max(x: i32, y: i32) -> i32 {
+    let z = x.saturating_sub(y);
+    let sign_x = sign(x);
+    let sign_y = sign(y);
+    let sign_z = sign(z);
+
+    let diff_x_y = sign_x ^ sign_y;
+    let same_x_y = flip(diff_x_y);
+
+    let return_x = diff_x_y * sign_x + same_x_y * sign_z;
+    let return_y = flip(return_x);
+    return_x * x + return_y * y
+}
+
 pub fn print_binary(num: i32) {
     let mut i = 31;
     let mut result = String::new();
@@ -20,15 +70,15 @@ pub fn print_binary(num: i32) {
  * 给定一个包含 [0, n] 中 n 个数的数组 nums ，找出 [0, n] 这个范围内没有出现在数组中的那个数。
  */
 pub fn missing_number(nums: Vec<i32>) -> i32 {
-    let n = nums.len() as i32;
-    let mut eor_all = 0;
-    let mut eor_has = 0;
-    for i in 0..n {
-        eor_all ^= i;
-        eor_has ^= nums[i as usize];
+    let n = nums.len();
+    let mut xor_all = 0;
+    let mut xor_has = 0;
+    for (i, num) in nums.into_iter().enumerate() {
+        xor_all ^= i;
+        xor_has ^= num;
     }
-    eor_all ^= n;
-    eor_all ^ eor_has
+    xor_all ^= n;
+    xor_all as i32 ^ xor_has
 }
 
 /**
@@ -37,11 +87,7 @@ pub fn missing_number(nums: Vec<i32>) -> i32 {
  * 你必须设计并实现线性时间复杂度的算法来解决此问题，且该算法只使用常量额外空间。
  */
 pub fn single_number_i(nums: Vec<i32>) -> i32 {
-    let mut eor = 0;
-    nums.into_iter().for_each(|num| {
-        eor ^= num;
-    });
-    eor
+    nums.into_iter().fold(0, |acc, num| acc ^ num)
 }
 
 /**
@@ -70,15 +116,17 @@ pub fn single_number_ii(nums: Vec<i32>) -> i32 {
     find(&nums, 3)
 }
 
+fn brian_kernighan(n: i32) -> i32 {
+    n & -n
+}
+
 /**
+ * 260. 只出现一次的数字 III
  * https://leetcode.cn/problems/single-number-iii/description/
- * 给你一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。
- * 找出只出现一次的那两个元素。你可以按 任意顺序 返回答案。
- * 你必须设计并实现线性时间复杂度的算法且仅使用常量额外空间来解决此问题。
  */
 pub fn two_single_number_iii(nums: Vec<i32>) -> Vec<i32> {
     let eor_1 = nums.iter().fold(0, |r, v| r ^ v);
-    let right_one = eor_1 & -eor_1;
+    let right_one = brian_kernighan(eor_1);
     let mut eor_2 = 0;
     for num in &nums {
         if (right_one & num) == 0 {
