@@ -1,5 +1,3 @@
-use core::num;
-
 fn is_odd(num: i32) -> bool {
     num & 1 == 1
 }
@@ -66,8 +64,8 @@ pub fn print_binary(num: i32) {
 }
 
 /**
+ * 268. 丢失的数字
  * https://leetcode.cn/problems/missing-number/description/
- * 给定一个包含 [0, n] 中 n 个数的数组 nums ，找出 [0, n] 这个范围内没有出现在数组中的那个数。
  */
 pub fn missing_number(nums: Vec<i32>) -> i32 {
     let n = nums.len();
@@ -82,19 +80,16 @@ pub fn missing_number(nums: Vec<i32>) -> i32 {
 }
 
 /**
+ * 136. 只出现一次的数字
  * https://leetcode.cn/problems/single-number/description/
- * 给你一个 非空 整数数组 nums ，除了某个元素只出现一次以外，其余每个元素均出现两次(或偶数次)。找出那个只出现了一次的元素。
- * 你必须设计并实现线性时间复杂度的算法来解决此问题，且该算法只使用常量额外空间。
  */
 pub fn single_number_i(nums: Vec<i32>) -> i32 {
     nums.into_iter().fold(0, |acc, num| acc ^ num)
 }
 
 /**
+ * 137. 只出现一次的数字 II
  * https://leetcode.cn/problems/single-number-ii/
- * 给你一个整数数组 nums ，除某个元素仅出现 一次 外，其余每个元素都恰出现 三次 。
- * 请你找出并返回那个只出现了一次的元素。
- * 你必须设计并实现线性时间复杂度的算法且使用常数级空间来解决此问题。
  */
 pub fn single_number_ii(nums: Vec<i32>) -> i32 {
     let find = |array: &Vec<i32>, m: usize| {
@@ -137,16 +132,16 @@ pub fn two_single_number_iii(nums: Vec<i32>) -> Vec<i32> {
 }
 
 /**
+ * 231. 2 的幂
  * https://leetcode.cn/problems/power-of-two/
- * 给你一个整数 n，请你判断该整数是否是 2 的幂次方。如果是，返回 true ；否则，返回 false 。
  */
 pub fn is_power_of_two(n: i32) -> bool {
     n > 0 && n == (n & -n)
 }
 
 /**
+ * 201. 数字范围按位与
  * https://leetcode.cn/problems/bitwise-and-of-numbers-range/description/
- * 给你两个整数 left 和 right ，表示区间 [left, right] ，返回此区间内所有数字 按位与 的结果（包含 left 、right 端点）。
  */
 pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
     let mut ans = right;
@@ -157,8 +152,8 @@ pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
 }
 
 /**
+ * 190. 颠倒二进制位
  * https://leetcode.cn/problems/reverse-bits/
- * 颠倒给定的 32 位无符号整数的二进制位。
  */
 pub fn reverse_bits(x: i32) -> i32 {
     let mut n = x;
@@ -219,6 +214,7 @@ pub fn binary_div(a: i32, b: i32) -> i32 {
 }
 
 /**
+ * 52. N 皇后 II
  * 非位运算版本
  * https://leetcode.cn/problems/n-queens-ii/
 */
@@ -255,7 +251,7 @@ pub fn binary_div(a: i32, b: i32) -> i32 {
 // }
 
 /**
- * 位运算版本
+ * 52. N 皇后 II
  * https://leetcode.cn/problems/n-queens-ii/
 */
 pub fn total_n_queens(n: i32) -> i32 {
