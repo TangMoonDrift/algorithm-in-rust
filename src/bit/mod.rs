@@ -140,6 +140,32 @@ pub fn is_power_of_two(n: i32) -> bool {
 }
 
 /**
+ * 326. 3 的幂
+ * https://leetcode.cn/problems/power-of-three/description/
+*/
+pub fn is_power_of_three(n: i32) -> bool {
+    n > 0 && 1162261467 % n == 0
+}
+
+/**
+ * 比n大，最接近n的2次幂。
+ */
+pub fn near_2_power(n: i32) -> i32 {
+    let mut n = n;
+    if n < 0 {
+        return 1;
+    }
+
+    n -= 1;
+    n |= n >> 1;
+    n |= n >> 2;
+    n |= n >> 4;
+    n |= n >> 8;
+    n |= n >> 16;
+    n + 1
+}
+
+/**
  * 201. 数字范围按位与
  * https://leetcode.cn/problems/bitwise-and-of-numbers-range/description/
  */
@@ -155,12 +181,12 @@ pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
  * 190. 颠倒二进制位
  * https://leetcode.cn/problems/reverse-bits/
  */
-pub fn reverse_bits(x: i32) -> i32 {
+pub fn reverse_bits(x: u32) -> u32 {
     let mut n = x;
-    n = ((n & 0xaaaaaaaa_u32 as i32) >> 1) | ((n & 0x55555555) << 1);
-    n = ((n & 0xcccccccc_u32 as i32) >> 2) | ((n & 0x33333333) << 2);
-    n = ((n & 0xf0f0f0f0_u32 as i32) >> 4) | ((n & 0x0f0f0f0f) << 4);
-    n = ((n & 0xff00ff00_u32 as i32) >> 8) | ((n & 0x00ff00ff) << 8);
+    n = ((n & 0xaaaaaaaa) >> 1) | ((n & 0x55555555) << 1);
+    n = ((n & 0xcccccccc) >> 2) | ((n & 0x33333333) << 2);
+    n = ((n & 0xf0f0f0f0) >> 4) | ((n & 0x0f0f0f0f) << 4);
+    n = ((n & 0xff00ff00) >> 8) | ((n & 0x00ff00ff) << 8);
     n = (n >> 16) | (n << 16);
     n
 }
