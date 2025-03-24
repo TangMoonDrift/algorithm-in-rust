@@ -45,7 +45,7 @@ impl BitSet {
         self.bits[index / 32] &= !(1 << (index % 32));
     }
 
-    pub fn reverse(&mut self, index: usize) {
+    pub fn switch(&mut self, index: usize) {
         self.bits[index / 32] ^= 1 << (index % 32);
     }
 
