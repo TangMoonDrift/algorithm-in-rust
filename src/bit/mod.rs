@@ -191,6 +191,24 @@ pub fn reverse_bits(x: u32) -> u32 {
     n
 }
 
+/**
+ * 461. 汉明距离
+ * https://leetcode.cn/problems/hamming-distance/description/
+ */
+pub fn hamming_distance(x: i32, y: i32) -> i32 {
+    let count_ones = |n: i32| {
+        let mut n = n;
+        n = (n & 0x55555555) + ((n >> 1) & 0x55555555);
+        n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
+        n = (n & 0x0f0f0f0f) + ((n >> 4) & 0x0f0f0f0f);
+        n = (n & 0x00ff00ff) + ((n >> 8) & 0x00ff00ff);
+        n = (n & 0x0000ffff) + ((n >> 16) & 0x0000ffff);
+        n
+    };
+
+    count_ones(x ^ y)
+}
+
 pub fn binary_add(mut a: i32, mut b: i32) -> i32 {
     let mut ans = a;
     while b != 0 {
