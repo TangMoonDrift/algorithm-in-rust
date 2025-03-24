@@ -1,3 +1,6 @@
+pub mod bit_map;
+pub mod bit_set;
+
 fn is_odd(num: i32) -> bool {
     num & 1 == 1
 }
