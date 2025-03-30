@@ -1,6 +1,7 @@
 //! 前缀树
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
+#[derive(Debug, Clone)]
 pub struct Trie {
     pass: usize,
     end: usize,
@@ -91,7 +92,6 @@ impl Trie {
             if node.nexts[i].as_ref().unwrap().pass - 1 == 0 {
                 let next_node = node.nexts[i].as_mut().unwrap();
                 node.nexts[i] = None;
-                free(next_node);
                 return;
             } else {
                 node.nexts[i].as_mut().unwrap().pass -= 1;
@@ -113,7 +113,6 @@ impl Trie {
             if node.nexts[i].as_ref().unwrap().pass - count == 0 {
                 let next_node = node.nexts[i].as_mut().unwrap();
                 node.nexts[i] = None;
-                free(next_node);
                 return;
             } else {
                 node.nexts[i].as_mut().unwrap().pass -= count;

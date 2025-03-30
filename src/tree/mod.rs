@@ -1,7 +1,6 @@
 pub mod trie;
 
 use std::cell::RefCell;
-use std::collections::VecDeque;
 use std::rc::Rc;
 use std::sync::mpsc::{self, Sender};
 
@@ -29,28 +28,35 @@ impl TreeNode {
  */
 pub fn level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
     let mut ans = vec![];
-    let mut queue = VecDeque::new();
-    if let Some(x) = root {
-        queue.push_back(x);
-    }
-    while !queue.is_empty() {
-        let size = queue.len();
-        let mut level = Vec::with_capacity(size);
+    let mut queue: Vec<Option<Rc<RefCell<TreeNode>>>> = vec![None; 2001];
+    let (mut l, mut r) = (0, 0);
 
+    if let Some(x) = root {
+        queue[r] = Some(Rc::clone(&x));
+        r += 1;
+    }
+
+    while l < r {
+        let size = r - l;
+        let mut level = Vec::with_capacity(size);
         for _ in 0..size {
-            if let Some(node) = queue.pop_front() {
+            if let Some(node) = queue[l].take() {
                 let mut x = node.borrow_mut();
                 level.push(x.val);
                 if let Some(left) = x.left.take() {
-                    queue.push_back(left);
+                    queue[r] = Some(Rc::clone(&left));
+                    r += 1;
                 }
                 if let Some(right) = x.right.take() {
-                    queue.push_back(right);
+                    queue[r] = Some(Rc::clone(&right));
+                    r += 1;
                 }
             }
+            l += 1;
         }
         ans.push(level);
     }
+
     ans
 }
 
