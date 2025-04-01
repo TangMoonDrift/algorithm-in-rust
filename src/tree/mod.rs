@@ -61,6 +61,7 @@ pub fn level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
 }
 
 /**
+ * 662. 二叉树最大宽度
  * https://leetcode.cn/problems/maximum-width-of-binary-tree/description/
  */
 pub fn width_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
@@ -89,6 +90,7 @@ pub fn width_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
 }
 
 /**
+ * 111. 二叉树的最小深度
  * https://leetcode.cn/problems/minimum-depth-of-binary-tree/description/
  */
 pub fn min_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
@@ -111,51 +113,32 @@ pub fn min_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
     let mut r = i32::MAX;
 
     if left.is_some() {
-        l = Self::min_depth(left);
+        l = min_depth(left);
     }
 
     if right.is_some() {
-        r = Self::min_depth(right);
+        r = min_depth(right);
     }
 
     l.min(r) + 1
 }
 
-/** https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/description/ */
+/**
+ * 236. 二叉树的最近公共祖先
+ * https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/description/
+ */
 pub fn lowest_common_ancestor(
     root: Option<Rc<RefCell<TreeNode>>>,
     p: Option<Rc<RefCell<TreeNode>>>,
     q: Option<Rc<RefCell<TreeNode>>>,
 ) -> Option<Rc<RefCell<TreeNode>>> {
-    // if let Some(x) = root.as_ref() {
-    //     if x.borrow().val == p.as_ref().unwrap().borrow().val
-    //         || x.borrow().val == q.as_ref().unwrap().borrow().val
-    //     {
-    //         return Some(Rc::clone(x));
-    //     }
-    //     let p_cloned = Some(p.as_ref().unwrap().clone());
-    //     let q_cloned = Some(q.as_ref().unwrap().clone());
-
-    //     let left = Self::lowest_common_ancestor(x.borrow_mut().left.take(), p_cloned, q_cloned);
-    //     let right = Self::lowest_common_ancestor(x.borrow_mut().right.take(), p, q);
-    //     if left.is_none() {
-    //         right
-    //     } else if right.is_none() {
-    //         left
-    //     } else {
-    //         Some(Rc::clone(x))
-    //     }
-    // } else {
-    //     None
-    // }
-
     if root.is_none() || p == root || q == root {
         return root;
     }
     let x = root.as_ref().unwrap();
 
-    let l = Self::lowest_common_ancestor(x.borrow_mut().left.take(), p.clone(), q.clone());
-    let r = Self::lowest_common_ancestor(x.borrow_mut().right.take(), p, q);
+    let l = lowest_common_ancestor(x.borrow_mut().left.take(), p.clone(), q.clone());
+    let r = lowest_common_ancestor(x.borrow_mut().right.take(), p, q);
 
     if l.is_some() && r.is_some() {
         return root;
@@ -169,6 +152,7 @@ pub fn lowest_common_ancestor(
 }
 
 /**
+ * 235. 二叉搜索树的最近公共祖先
  * https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/description/
  */
 pub fn lowest_common_ancestor_in_a_search_tree(
@@ -195,6 +179,7 @@ pub fn lowest_common_ancestor_in_a_search_tree(
 }
 
 /**
+ * 110. 平衡二叉树
  * https://leetcode.cn/problems/balanced-binary-tree/description/
  */
 pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
