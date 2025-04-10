@@ -10,11 +10,7 @@ pub struct Path {
 
 impl Ord for Path {
     fn cmp(&self, other: &Self) -> Ordering {
-        match self.weight.cmp(&other.weight) {
-            Ordering::Less => Ordering::Greater,
-            Ordering::Greater => Ordering::Less,
-            Ordering::Equal => Ordering::Equal,
-        }
+        other.weight.cmp(&self.weight)
     }
 }
 

@@ -1,5 +1,11 @@
 //! 数论专题
+pub mod gcd;
+pub mod lcm;
 pub mod power;
+
+pub use gcd::*;
+pub use lcm::*;
+pub use power::*;
 
 /**
  * how to find the prime factors of a number
