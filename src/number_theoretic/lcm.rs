@@ -32,7 +32,7 @@
 //! - [Greatest Common Divisor](https://en.wikipedia.org/wiki/Greatest_common_divisor)
 //! - [Least Common Multiple](https://en.wikipedia.org/wiki/Least_common_multiple)
 //! - [Least Common Multiple](https://en.wikipedia.org/wiki/Least_common_multiple)
-use super::*;
+use super::gcd::gcd_stein;
 pub fn lcm(mut m: u64, mut n: u64) -> u64 {
     if m == 0 || n == 0 {
         0
@@ -44,19 +44,37 @@ pub fn lcm(mut m: u64, mut n: u64) -> u64 {
     }
 }
 
-// 求第 n 个神奇数字
+// 878. 第 N 个神奇数字
+// https://leetcode.cn/problems/nth-magical-number/
 pub fn nth_magical_number(n: i32, a: i32, b: i32) -> i32 {
-    let lcm = lcm(a as u64, b as u64) as i64;
-    let (mut ans, mut l, mut r): (i64, i64, i64) = (0, 0, n as i64 * lcm);
+    fn gcd(m: i32, n: i32) -> i32 {
+        match n {
+            0 => m,
+            _ => {
+                let r = m % n;
+                gcd(n, r)
+            }
+        }
+    }
+
+    fn lcm(m: i32, n: i32) -> i32 {
+        m / gcd(m, n) * n
+    }
+
+    let LCM = lcm(a, b) as i64;
+    let mut ans: i64 = 0;
+
+    let (mut l, mut r, mut m): (i64, i64, i64) = (0, (n as i64) * (a.min(b) as i64), 0);
     while l <= r {
-        let m = (r - l) >> 1 + l;
-        if m / a as i64 + m / b as i64 - m / lcm as i64 >= n as i64 {
+        m = (r - l) / 2 + l;
+        if m / (a as i64) + m / (b as i64) - m / LCM >= n as i64 {
             ans = m;
             r = m - 1;
         } else {
             l = m + 1;
         }
     }
+
     (ans % 1000_000_007) as i32
 }
 
