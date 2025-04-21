@@ -24,9 +24,9 @@ impl Trie {
             let i = (c - b'a') as usize;
             if node.nexts[i].is_none() {
                 node.nexts[i] = Some(Box::new(Trie::new()));
-                node.nexts[i].as_mut().unwrap().pass += 1;
-                node = node.nexts[i].as_mut().unwrap();
             }
+            node.nexts[i].as_mut().unwrap().pass += 1;
+            node = node.nexts[i].as_mut().unwrap();
         }
         node.end += 1;
     }
