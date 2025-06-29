@@ -25,8 +25,8 @@ impl Trie {
             if node.nexts[i].is_none() {
                 node.nexts[i] = Some(Box::new(Trie::new()));
             }
-            node.nexts[i].as_mut().unwrap().pass += 1;
             node = node.nexts[i].as_mut().unwrap();
+            node.pass += 1;
         }
         node.end += 1;
     }
@@ -80,7 +80,7 @@ impl Trie {
     }
 
     pub fn erase(&mut self, word: &str) {
-        let count = self.count_words_equal_to(&word);
+        let count = self.count_words_equal_to(word);
         if count == 0 {
             return;
         }
@@ -90,8 +90,7 @@ impl Trie {
         for &c in word.as_bytes() {
             let i = (c - b'a') as usize;
             if node.nexts[i].as_ref().unwrap().pass - 1 == 0 {
-                let next_node = node.nexts[i].as_mut().unwrap();
-                node.nexts[i] = None;
+                drop(node.nexts[i].take());
                 return;
             } else {
                 node.nexts[i].as_mut().unwrap().pass -= 1;
@@ -111,8 +110,7 @@ impl Trie {
         for &c in word.as_bytes() {
             let i = (c - b'a') as usize;
             if node.nexts[i].as_ref().unwrap().pass - count == 0 {
-                let next_node = node.nexts[i].as_mut().unwrap();
-                node.nexts[i] = None;
+                drop(node.nexts[i].take());
                 return;
             } else {
                 node.nexts[i].as_mut().unwrap().pass -= count;
