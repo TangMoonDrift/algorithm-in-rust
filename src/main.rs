@@ -13,6 +13,10 @@ mod tree;
 
 fn main() {
     let mut array = [2, 1, 4, 3, 6, 5, 8, 7, 10, 9];
-    array::sort::random_quick_sort(&mut array);
-    println!("{:?}", array);
+    // array::sort::random_quick_sort(&mut array);
+    // println!("{:?}", array);
+
+    let mut sort = array::sort::Sort::from(&mut array);
+    sort.merge_sort();
+    println!("{:?}", sort.array);
 }
