@@ -31,6 +31,11 @@ where
     /// # 返回值
     /// 如果数组已排序返回true，否则返回false
     pub fn is_sorted(&self) -> bool {
+        let len = self.array.len();
+        if len <= 1 {
+            return true;
+        }
+
         for i in 0..(self.array.len() - 1) {
             if self.array[i] > self.array[i + 1] {
                 return false;
@@ -340,37 +345,47 @@ where
         let pivot_idx = rng.random_range(0..len);
         array.swap(0, pivot_idx);
 
-        let pivot_pos = Self::partition(array);
-        let (left, right) = array.split_at_mut(pivot_pos);
-        Self::random_quick_sort_helper(left);
-        Self::random_quick_sort_helper(&mut right[1..]);
+        let (low, high) = Self::partition(array);
+
+        // 仅对小于pivot的区域递归排序
+        if low > 0 {
+            Self::random_quick_sort_helper(&mut array[..low]);
+        }
+
+        // 仅对大于pivot的区域递归排序
+        if high < len - 1 {
+            Self::random_quick_sort_helper(&mut array[high + 1..]);
+        }
     }
 
-    /// 快速排序的辅助方法，用于分割数组
+    /// 快速排序的辅助方法，使用荷兰国旗法分割数组
+    ///
+    /// 荷兰国旗法将数组分为三部分：小于pivot、等于pivot、大于pivot
     ///
     /// # 参数
     /// - `array`：要分割的数组
     ///
     /// # 返回值
-    /// 返回pivot元素的最终位置
-    fn partition(array: &mut [T]) -> usize {
+    /// 返回等于pivot区域的左右边界 (low, high)
+    fn partition(array: &mut [T]) -> (usize, usize) {
         let pivot = array[0];
-        let mut left = 1;
-        let mut right = array.len() - 1;
+        let mut low = 0;
+        let mut current = 0;
+        let mut high = array.len() - 1;
 
-        while left <= right {
-            while left <= right && array[left] <= pivot {
-                left += 1;
-            }
-            while left <= right && array[right] >= pivot {
-                right -= 1;
-            }
-            if left < right {
-                array.swap(left, right);
+        while current <= high {
+            if array[current] < pivot {
+                array.swap(current, low);
+                low += 1;
+                current += 1;
+            } else if array[current] > pivot {
+                array.swap(current, high);
+                high -= 1;
+            } else {
+                current += 1;
             }
         }
 
-        array.swap(0, right);
-        right
+        (low, high)
     }
 }
